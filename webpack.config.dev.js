@@ -12,7 +12,7 @@ module.exports = {
 		path: __dirname,
 		// publicPath: 'http://localhost:3000/scripts/',
 		// filename: '[name].js'
-		filename: 'bundle.js'
+		filename: 'cw2.js'
 	},
 	module: {
 		loaders: [{
