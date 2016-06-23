@@ -9,40 +9,70 @@
 	<script type="text/javascript" src="./bundle.js"></script>
 </head>
 <body>
-	<div class="container">
+	<div class="cw container">
 		<div class="row">
-			<h2>组件1</h2>
-			<div class="toScroll">
-				<ul>
-					<li>1</li>
-					<li>2</li>
-					<li>3</li>
-					<li>4</li>
-					<li>5</li>
-					<li>6</li>
-					<li>7</li>
-				</ul>
+			<div class="col">
+				<h2>组件1</h2>
+
+				<div class="row">
+					<div class="col">
+						<div class="toScroll">
+							<ul>
+								<li>星期1</li>
+								<li>星期2</li>
+								<li>星期3</li>
+								<li>星期4</li>
+								<li>星期5</li>
+								<li>星期6</li>
+								<li>星期7</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col">
+						<div class="toPage"></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col w3">
+						<div class="toRadio"></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col w2">
+						<div class="toCheckbox"></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col w8">
+						<div class="toSelect"></div>
+					</div>
+					<div class="col w8">
+						<div class="toSelect"></div>
+					</div>
+				</div>
 			</div>
-
-			<div class="toPage"></div>
-			<div class="toRadio"></div>
-			<div class="toCheckbox"></div>
-			<div class="toSelect"></div>
-			<div class="toSelect"></div>
-		</div>
-
-		<div class="row">
-			<h2>组件2</h2>
-			<button onclick="$.cw.alert();">Alert</button>
-			<button onclick="$.cw.confirm();">Confirm</button>
 		</div>
 
 		<div class="row">
 			<div class="col">
+				<h2>组件2</h2>
+				<button class="cw btn" onclick="$.cw.alert();">Alert</button>
+				<button class="cw btn" onclick="$.cw.confirm();">Confirm</button>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col w2">
 				<div></div>
 			</div>
 
-			<div class="col">
+			<div class="col w4">
 				<div></div>
 			</div>
 		</div>

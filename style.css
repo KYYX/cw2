@@ -1,8 +1,5 @@
 * {
-	padding: 0;
-	margin: 0;
 	font-family: '微软雅黑';
-	outline: none;
 }
 
 div.toScroll {
@@ -11,44 +8,13 @@ div.toScroll {
 	border: 1px solid #a9a9a9;
 }
 
-div.toScroll > :first-child {
-	/*height: 300px;*/
-}
-
 div.toScroll li {
-	height: 20px;
-	line-height: 20px;
+	height: 25px;
+	padding: 0 8px;
+	line-height: 25px;
 }
 
 div.toSelect {
 	float: left;
 	margin-right: 16px; 
-}
-
-.container {
-	padding: 8px;
-}
-
-.row {
-	padding: 8px;
-	margin-bottom: 8px;
-	border: 1px dashed;
-}
-.row:after {
-	content: '';
-	display: block;
-	clear: both;
-}
-
-.col {
-	float: left;
-	box-sizing: border-box;
-	width: 50%;
-	padding: 8px 64px 8px 8px;
-	/*border: 1px ridge red;*/
-}
-
-.col > div {
-	height: 80px;
-	border: 1px solid;
 }
