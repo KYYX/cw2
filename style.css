@@ -12,7 +12,12 @@ div.toScroll {
 }
 
 div.toScroll > :first-child {
-	height: 300px;
+	/*height: 300px;*/
+}
+
+div.toScroll li {
+	height: 20px;
+	line-height: 20px;
 }
 
 div.toSelect {
