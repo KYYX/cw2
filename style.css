@@ -19,6 +19,11 @@ div.toSelect {
 	margin-right: 16px; 
 }
 
-div.cw.panel > .header > i {
+div.cw.container {
+	width: 1000px;
+	margin: 0 auto;
+}
+
+div.cw.panel.icon > .header {
 	background-image: url(./images/icon_check.png);
 }

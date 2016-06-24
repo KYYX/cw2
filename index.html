@@ -5,16 +5,12 @@
 	<title>cw2</title>
 	<link   rel="stylesheet" type="text/css" href="./style.css">
 	<script type="text/javascript" src="./libs/jquery-3.0.0.min.js"></script>
-	<script type="text/javascript" src="./libs/jquery.mousewheel.min.js"></script>
 	<script type="text/javascript" src="./cw2.js"></script>
 </head>
 <body>
-	<div class="cw container">
+	<div class="cw container dev">
 		<div class="row">
 			<div class="col">
-				<div class="row">
-					<h2>组件1</h2>
-				</div>
 				<div class="row">
 					<div class="col">
 						<div class="toScroll">
@@ -62,65 +58,22 @@
 
 		<div class="row">
 			<div class="col">
-				<div class="row">
-					<div class="col">
-						<h2>组件2</h2>
-					</div>
-				</div>
-				<div class="row">
-					<button class="cw btn" onclick="$.cw.alert();">Alert</button>
-					<button class="cw btn" onclick="$.cw.confirm();">Confirm</button>
-				</div>
+				<button class="cw btn" onclick="$.cw.alert();">Alert</button>
+				<button class="cw btn" onclick="$.cw.confirm();">Confirm</button>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col w2">
-				<div class="cw panel">
-					<div class="header">
-						<i></i>
-						<span>这是50%宽度的panel</span>
-					</div>
-					<div class="divide"></div>
-					<div class="content">随便打点东西好了</div>
-					<div class="divide"></div>
-					<div class="footer">
-						<button class="cw btn">确定</button>
-						<button class="cw btn">取消</button>
-					</div>
-				</div>
+				<div class="toPanel tpl1"></div>
 			</div>
 
 			<div class="col w4">
-				<div class="cw panel">
-					<div class="header">
-						<i></i>
-						<span>这是25宽度的panel</span>
-					</div>
-					<div class="divide"></div>
-					<div class="content">随便打点东西好了</div>
-					<div class="divide"></div>
-					<div class="footer">
-						<button class="cw btn">确定</button>
-						<button class="cw btn">取消</button>
-					</div>
-				</div>
+				<div class="toPanel tpl2"></div>
 			</div>
 
 			<div class="col w4">
-				<div class="cw panel">
-					<div class="header">
-						<i></i>
-						<span>又一个25宽度的panel</span>
-					</div>
-					<div class="divide"></div>
-					<div class="content">随便打点东西好了</div>
-					<div class="divide"></div>
-					<div class="footer">
-						<button class="cw btn">确定</button>
-						<button class="cw btn">取消</button>
-					</div>
-				</div>
+				<div class="toPanel tpl3"></div>
 			</div>
 		</div>
 	</div>

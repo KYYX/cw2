@@ -55,3 +55,28 @@ $(".toSelect").toSelect({
 		console.log(checkeds);
 	}
 });
+
+$(".toPanel.tpl1").toPanel({
+	icon: "./images/icon_check.png",
+	title: "这是一个带icon的Panel组件",
+	content: "我是panel的content部分",
+	btns: [{
+		name: "确定",
+		callback: function () {
+			alert("确定");
+		}
+	}, {
+		name: "取消"
+	}]
+});
+
+$(".toPanel.tpl2").toPanel({
+	icon: "./images/icon_check.png",
+	title: "这是一个带icon但没有footer的Panel组件",
+	content: "我是panel的content部分",
+});
+
+$(".toPanel.tpl3").toPanel({
+	title: "这是不带icon又没有footer的Panel组件",
+	content: "我是panel的content部分",
+});

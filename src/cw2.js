@@ -1,5 +1,7 @@
 require('./cw2.less');
 
+require('./mousewheel');
+
 (function ($) {
 	'use strict';
 
@@ -93,7 +95,9 @@ require('./cw2.less');
 	};
 	/*
 	 @name 下拉组件默认配置
-	 @param
+	 @param alias:object:{name,value} -> 别名对应
+	 @param data:array:[]
+	 @param callback:function(checked): -> 点击回调
 	 */
 	var SELECT_CONFIG = {
 		placeholder: "",
@@ -101,6 +105,8 @@ require('./cw2.less');
 		data: [],
 		callback: function (checked) {}
 	};
+
+	var PANEL_CONFIG = {};
 	/*
 	 @name 表格组件默认配置
 	 @param
@@ -504,6 +510,58 @@ require('./cw2.less');
 		}
 	})();
 
+
+	var _toPanel = (function () {
+		var tpl = '<div class="cw panel">' +
+				  '	<div class="header"></div>' +
+				  '	<div class="divide"></div>' +
+				  '	<div class="content"></div>' +
+				  '	<div class="divide"></div>' +
+				  '	<div class="footer"></div>' +
+				  '</div>';
+
+		return function ($this, cfg) {
+			var title   = cfg.title;
+			var content = cfg.content;
+			var footer  = cfg.footer;
+			var btns    = cfg.btns;
+
+			var $panel = $(tpl);
+
+			var $footer = $panel.children('.footer');
+
+			if (cfg.icon) {
+				$panel.addClass("icon")
+					  .css("backgroundImage", cfg.icon);
+			}
+
+			$panel.children('.header').append('<span class="cw ellipsis">' + title + '</span>');
+
+			if (content instanceof jQuery) {
+				$panel.children('.content').append(content);
+			} else {
+				$panel.children('.content').html(content);
+			}
+
+			if (btns instanceof Array && btns.length > 0) {
+				btns.forEach(function (btn) {
+					var $btn = $('<button class="cw btn '+(btn.type || "")+'">'+btn.name+'</button>');
+
+					if (typeof btn.callback === "function") {
+						$btn.click(btn.callback);
+					}
+
+					$footer.append($btn);
+				});
+			} else {
+				$panel.children('.divide:last').remove();
+				$footer.remove();
+			}
+
+			$this.append($panel);
+		}
+	})();
+
 	//扩展jQuery插件
 	$.fn.extend({
 		toPage: function (cfg) {
@@ -543,6 +601,14 @@ require('./cw2.less');
 
 			this.each(function () {
 				_toSelect($(this), _cfg);
+			});
+		},
+
+		toPanel: function (cfg) {
+			var _cfg = $.extend(PANEL_CONFIG, cfg);
+
+			this.each(function () {
+				_toPanel($(this), _cfg);
 			});
 		}
 	});
