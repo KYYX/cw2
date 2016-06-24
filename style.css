@@ -18,3 +18,7 @@ div.toSelect {
 	float: left;
 	margin-right: 16px; 
 }
+
+div.cw.panel > .header > i {
+	background-image: url(./images/icon_check.png);
+}
