@@ -41,7 +41,6 @@ require('./mousewheel');
 		WW = window.innerWidth;
 	});
 
-	//各组件默认配置
 	/*
 	 @name 分页组件默认配置
 	 @param  max:number:1 -> 最大页码
@@ -105,9 +104,20 @@ require('./mousewheel');
 		data: [],
 		callback: function (checked) {}
 	};
-
-	var PANEL_CONFIG = {};
 	/*
+	 @name 面板组件默认配置
+	 @param title:string
+	 @param content:string | jQuery
+	 @param btns:array:[]
+	 */
+	var PANEL_CONFIG = {
+		title: "",
+		content: "",
+		btns: []
+	};
+
+	/*
+	 TODO
 	 @name 表格组件默认配置
 	 @param
 	 */
@@ -510,7 +520,6 @@ require('./mousewheel');
 		}
 	})();
 
-
 	var _toPanel = (function () {
 		var tpl = '<div class="cw panel">' +
 				  '	<div class="header"></div>' +
@@ -523,7 +532,6 @@ require('./mousewheel');
 		return function ($this, cfg) {
 			var title   = cfg.title;
 			var content = cfg.content;
-			var footer  = cfg.footer;
 			var btns    = cfg.btns;
 
 			var $panel = $(tpl);
