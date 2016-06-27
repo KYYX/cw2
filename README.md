@@ -16,9 +16,13 @@
 ### 三、使用方法 ###
 1. 安装最新版的 [nodejs](https://nodejs.org/en/download/)
 2. 安装 webpack
+
     > npm install -g webpack 
+
 3. 编译套件
+
 	> npm run build
+	
 4. 在项目中引入生成的 cw2.js 文件
 
 ***
