@@ -10,6 +10,12 @@
     overflow: hidden;
 }
 
+.cw-link {}
+
+.cw-text-center {text-align: center;}
+.cw-text-right  {text-align: right;}
+.cw-text-left	{text-align: left;}
+
 .cw.container {
 	padding: 1px 16px 1px 16px;
 	background-color: #e9e9e9;
@@ -32,7 +38,7 @@
 		& > .col {
 			float: left;
 			box-sizing: border-box;
-			width: 100%;
+			width: auto;
 			/*padding: 8px;*/
 			background-color: #fff;
 
@@ -324,6 +330,119 @@
 
 		ul {
 			display: block;
+		}
+	}
+}
+
+.cw-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	th {
+		height: 40px;
+	    border-bottom: 1px solid #dddcdc;
+	    color: #616161;
+	    line-height: 40px;
+	    background-color: #f5f5f5;
+	}
+
+	tr.cw-even > td {
+		background-color: #fcfcfc;
+	}
+
+	tr.cw-odd > td {
+		
+	}
+
+	tr:first-child > td {
+		border-top: 0;
+	}
+
+	td {
+		height: 60px;
+    	line-height: 60px;
+    	border-top: 1px solid #f5f5f5;
+	}
+
+	td.cw-box {
+		width: 60px;
+		border-right: 1px solid #f5f5f5;
+		text-align: center;
+	}
+
+	i.cw-table-icon {
+		display: inline-block;
+		width:  13px;
+		height: 13px;
+		background-repeat: no-repeat;
+		background-position: center;
+		cursor: pointer;
+
+		&.cw-table-radio {
+			background-image: url('./images/icon_select.png');
+
+			&.cw-table-radio-checked {
+				background-image: url('./images/icon_selected.png');
+			}
+		}
+
+		&.cw-table-checkbox {
+			background-image: url('./images/icon_checkbox.png');
+
+			&.cw-table-checkbox-checked {
+				background-image: url('./images/icon_checkbox_selected.png');
+			}
+		}
+	}
+}
+
+.cw-tab {
+	position: relative;
+	padding-top: 42px;
+
+	& > .cw-tab-tabs {
+		position: absolute;
+		top:  0;
+		left: 0;
+		box-sizing: border-box;
+		width: 100%;
+		height: 42px;
+		padding: 0 24px;
+		border-bottom: 1px solid #ccf0df;
+		list-style-type: none;
+
+		& > li {
+			float: left;
+		    height: 42px;
+		    padding: 0 16px;
+		    color: #313131;
+		    font-size: 14px;
+		    text-align: center;
+		    line-height: 42px;
+		    cursor: pointer;
+
+		    &.cw-tab-active {
+		    	height: 41px;
+		    	border: 1px solid #ccf0df;
+			    border-bottom: 1px solid #f2fbf7;
+			    color: #21bd73;
+			    font-weight: bold;
+			    line-height: 40px;
+			    background-color: #f2fbf7;
+		    }
+		}
+	}
+
+	& > .cw-tab-contents {
+		height: 100%;
+		background-color: #f2fbf7;
+
+		& > div {
+			display: none;
+
+			&.cw-tab-content-show {
+				display: block;
+			}
 		}
 	}
 }

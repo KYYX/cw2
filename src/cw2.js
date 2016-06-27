@@ -1,12 +1,21 @@
+//默认组件样式
 require('./cw2.less');
+//鼠标滚轮事件插件
+require('./jquery.mousewheel');
+//组件默认配置
+import CONFIG from './config';
 
-require('./mousewheel');
+var createUUID = function (digit) {
+	var _digit = digit || 4;
+
+	return "abcd";
+};
 
 (function ($) {
 	'use strict';
 
 	if (!$) {
-		return alert('cw需要依赖jQuery');
+		return alert('cw2套件需要依赖jQuery库');
 	}
 
 	//小小的polyfill
@@ -31,6 +40,9 @@ require('./mousewheel');
 		};
 	}
 
+	var CW = {};
+	var COMPONENTS = ['Page',   'Scroll', 'Radio', 'Checkbox', 
+	 				  'Select', 'Panel',  'Table', 'Tab'];
 	var $ROOT, $BODY, WH, WW;
 
 	//静态变量
@@ -41,92 +53,8 @@ require('./mousewheel');
 		WW = window.innerWidth;
 	});
 
-	/*
-	 @name 分页组件默认配置
-	 @param  max:number:1 -> 最大页码
-	 @param  cur:number:1 -> 当前页码
-	 @param auto:boolean:true -> 初次加载是否执行回调函数
-	 @param callback:function(cur) -> 回调函数
-	 */
-	var PAGE_CONFIG = {
-		max:  1,
-		cur:  1,
-		auto: true,
-		callback: function () {}
-	};
-	/*
-	 @name 滚动条组件默认配置
-	 @param  gap:number:40 -> 滚轮滚动一次移动的距离
-	 @param  top:number:0  -> 滚动条默认距离顶部的位置
-	 @TODO 拖拽滚动条
-	 */
-	var SCROLL_CONFIG = {
-		gap:  40,
-        top:  0
-	};
-	/*
-	 @name 单选组件默认配置
-	 @param arrange:string:| -> 排列方式，-水平，!垂直
-	 @param alias:object:{name,value} -> 别名对应
-	 @param data:array:[]
-	 @param callback:function(checked:object): -> 点击回调
-	 */
-	var RADIO_CONFIG = {
-		arrange: "|",
-		alias: {name: 'name', value: 'value'},
-		data: [],
-		callback: function (checked) {}
-	};
-	/*
-	 @name 复选组件默认配置
-	 @param arrange:string:| -> 排列方式，-水平，!垂直
-	 @param alias:object:{name,value} -> 别名对应
-	 @param allBtn:boolean:false -> 是否有全选按钮
-	 @param data:array:[]
-	 @param callback:function(checkeds:array): -> 点击回调
-	 */
-	var CHECKBOX_CONFIG = {
-		arrange: "|",
-		alias: {name: 'name', value: 'value'},
-		data: [],
-		allBtn: false,
-		callback: function (checkeds) {}
-	};
-	/*
-	 @name 下拉组件默认配置
-	 @param alias:object:{name,value} -> 别名对应
-	 @param data:array:[]
-	 @param callback:function(checked): -> 点击回调
-	 */
-	var SELECT_CONFIG = {
-		placeholder: "",
-		alias: {name: 'name', value: 'value'},
-		data: [],
-		callback: function (checked) {}
-	};
-	/*
-	 @name 面板组件默认配置
-	 @param title:string
-	 @param content:string | jQuery
-	 @param btns:array:[]
-	 */
-	var PANEL_CONFIG = {
-		title: "",
-		content: "",
-		btns: []
-	};
-
-	/*
-	 TODO
-	 @name 表格组件默认配置
-	 @param
-	 */
-	var TABLE_CONFIG = {
-		
-	};
-
 	//jQuery插件实现方法
-	var _toPage = (function () {
+	CW._toPage = (function () {
 		var createPage = function (number) {
 			return $("<li class='page' data-page='"+number+"'>"+number+"</li>");
 		};
@@ -215,7 +143,7 @@ require('./mousewheel');
 		}
 	})();
 
-	var _toScroll = (function () {
+	CW._toScroll = (function () {
 	  	return function ($this, cfg) {
 	  		var curTop = cfg.top > 0 ? 0 - cfg.top : 0; //当前页面位置;
 
@@ -294,7 +222,7 @@ require('./mousewheel');
 	  	}
 	})();
 
-	var _toRadio = (function () {
+	CW._toRadio = (function () {
 		var render = function ($radio, data, checkedIndex) {
 			$radio.empty();
 
@@ -355,7 +283,7 @@ require('./mousewheel');
 		}
 	})();
 
-	var _toCheckbox = (function () {
+	CW._toCheckbox = (function () {
 		var render = function ($checkbox, data, checkedIndexes) {
 			$checkbox.empty();
 
@@ -457,7 +385,7 @@ require('./mousewheel');
 		}
 	})();
 
-	var _toSelect = (function () {
+	CW._toSelect = (function () {
 		var selectTpl = '<div class="cw select">' +
 						'	<div><p></p><i></i></div>' +
 				        '	<ul></ul>' +
@@ -520,7 +448,7 @@ require('./mousewheel');
 		}
 	})();
 
-	var _toPanel = (function () {
+	CW._toPanel = (function () {
 		var tpl = '<div class="cw panel">' +
 				  '	<div class="header"></div>' +
 				  '	<div class="divide"></div>' +
@@ -570,56 +498,163 @@ require('./mousewheel');
 		}
 	})();
 
-	//扩展jQuery插件
-	$.fn.extend({
-		toPage: function (cfg) {
-			var _cfg = $.extend(PAGE_CONFIG, cfg);
+	CW._toTable = (function () {
+		var tpl = '<table class="cw-table">' +
+				  '	<thead><tr></tr></thead>' +
+				  '	<tbody></tbody>' +
+				  '</table>';
 
-			this.each(function () {
-				_toPage($(this), _cfg);
+		var radioClassName 			 = 'cw-table-radio';
+		var radioCheckedClassName 	 = 'cw-table-radio-checked';
+		var checkboxClassName 		 = 'cw-table-checkbox';
+		var checkboxCheckedClassName = 'cw-table-checkbox-checked';
+
+		return function ($this, cfg) {
+			var mode  = cfg.mode;
+			var align = cfg.align;
+			var cols  = cfg.cols;
+			var rows  = cfg.rows;
+
+			var keyList = [];
+
+			var $table = $(tpl);
+			var $thead = $table.children('thead').children('tr:first');
+			var $tbody = $table.children('tbody');
+			var $checkboxAll;
+
+			if (mode !== 0) {
+				var $head;
+
+				if (mode === 2) {
+					$head = $('<th>' +
+							  '	<i class="cw-table-icon cw-table-checkbox"></i>' +
+							  '</th>');
+
+					$checkboxAll = $head.children('i').click(function () {
+						var $this = $(this);
+
+						$this.toggleClass(checkboxCheckedClassName);
+						
+						$tbody.find("." + checkboxClassName).toggleClass(
+							checkboxCheckedClassName, $this.hasClass(checkboxCheckedClassName)
+						);
+					});
+				} else {
+					$head = $('<th>&nbsp;</th>');
+				}
+
+				$thead.append($head);
+			}
+
+			cols.forEach(function (col, index) {
+				keyList.push(col.key);
+
+				$thead.append('<th>' + (col.text || "&nbsp;") + '</th>');
 			});
-		},
 
-		toScroll: function (cfg) {
-			var _cfg = $.extend(SCROLL_CONFIG, cfg);
+			rows.forEach(function (data, index) {
+				var className = (index + 1) % 2 === 0 ? "cw-even" : "cw-odd";
+				var $tr = $('<tr class="'+className+'"></tr>');
 
-			this.each(function () {
-				_toScroll($(this), _cfg);
+				if (mode !== 0) {
+					var type = mode === 1 ? 'radio' : 'checkbox';
+					var $td = $('<td class="cw-box">' +
+								'	<i class="cw-table-icon cw-table-' + type + '"></i>' +
+								'</td>');
+
+					$td.children('.' + radioClassName).click(function () {
+						$tbody.find("." + radioCheckedClassName).removeClass(radioCheckedClassName);
+						$(this).addClass(radioCheckedClassName);
+					});
+				
+
+					$td.children('.' + checkboxClassName).click(function () {
+						$(this).toggleClass(checkboxCheckedClassName);
+						var checkedAmount = $tbody.find("." + checkboxCheckedClassName).length;
+
+						$checkboxAll.toggleClass(
+							checkboxCheckedClassName, (checkedAmount === rows.length)
+						);
+					});
+					
+					$tr.append($td);
+				}
+
+				keyList.forEach(function (key, _index) {
+					var col   = cols[_index];
+					var align = col.align || "center";
+					var text  = data[key];
+					var type  = col.type;
+
+					var $td   = $('<td class="cw-text-' + align + '"></td>');
+
+					if (type === "url") {
+						$td.append('<a class="cw-link" href="' + data.href + '">' + text + '</a>');
+					} else {
+						$td.html(text);
+					}
+
+					$tr.append($td);
+				});
+
+				$tbody.append($tr);
 			});
-		},
 
-		toRadio: function (cfg) {
-			var _cfg = $.extend(RADIO_CONFIG, cfg);
+			$this.empty().append($table);
+		}
+	})();
 
-			this.each(function () {
-				_toRadio($(this), _cfg);
+	CW._toTab = (function () {
+		var tpl = '<div class="cw-tab">' +
+				  '	<ul class="cw-tab-tabs"></ul>' + 
+				  '	<div class="cw-tab-contents"></div>' + 
+				  '</div>';
+
+		return function ($this, cfg) {
+			var $tab  = $(tpl);
+			var $tabs = $tab.children('.cw-tab-tabs');
+			var $contents = $tab.children('.cw-tab-contents');
+
+			cfg.tabs.forEach(function (tab, index) {
+				var id   = tab.id || createUUID();
+
+				var $tab 	 = $('<li id="' + id + '">' + tab.text + '</li>');
+				var $content = $('<div id="' + id + '-content">' + tab.content + '</div>');
+
+				$tab.click(function () {
+					$tabs.children('.cw-tab-active').removeClass('cw-tab-active');
+					$tab.addClass('cw-tab-active');
+
+					$contents.children('.cw-tab-content-show').removeClass('cw-tab-content-show');
+					cfg.callback($content, (index + 1));
+					$content.addClass('cw-tab-content-show');
+				});
+
+				$tabs.append($tab);
+				$contents.append($content);
 			});
-		},
 
-		toCheckbox: function (cfg) {
-			var _cfg = $.extend(CHECKBOX_CONFIG, cfg);
+			$this.empty().append($tab);
 
-			this.each(function () {
-				_toCheckbox($(this), _cfg);
-			});
-		},
+			$tabs.children(':first').click();
+		}
+	})();
 
-		toSelect: function (cfg) {
-			var _cfg = $.extend(SELECT_CONFIG, cfg);
+	var cw_extends = {};
 
-			this.each(function () {
-				_toSelect($(this), _cfg);
-			});
-		},
-
-		toPanel: function (cfg) {
-			var _cfg = $.extend(PANEL_CONFIG, cfg);
+	COMPONENTS.forEach(function (name) {
+		cw_extends['to' + name] = function (cfg) {
+			var NAME = name.toUpperCase();
+			var _cfg = $.extend(CONFIG[NAME], cfg);
 
 			this.each(function () {
-				_toPanel($(this), _cfg);
+				CW['_to' + name]($(this), _cfg);
 			});
 		}
 	});
+
+	//扩展jQuery插件
+	 $.fn.extend(cw_extends);
 
 	/************************/
 	var toAlert = (function () {

@@ -27,3 +27,7 @@ div.cw.container {
 div.cw.panel.icon > .header {
 	background-image: url(./images/icon_check.png);
 }
+
+.cw-tab {
+	height: 200px;
+}
