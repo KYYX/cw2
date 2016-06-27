@@ -9,7 +9,7 @@ module.exports = {
 	},
 	entry: './src/cw2',
 	output: {
-		path: __dirname,
+		path: __dirname + "/build",
 		// publicPath: 'http://localhost:3000/scripts/',
 		// filename: '[name].js'
 		filename: 'cw2.js'

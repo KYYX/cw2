@@ -19,11 +19,12 @@
 
     > npm install -g webpack 
 
-3. 编译套件
+3. 执行下面的命令编译套件，会生成一个build文件夹
 
 	> npm run build
-	
-4. 在项目中引入生成的 cw2.js 文件
+
+4. 打开index.html，查看是否组件都正常显示
+5. 将 build 文件夹中的 cw2.js 放入工程中使用
 
 ***
 
