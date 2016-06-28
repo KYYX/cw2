@@ -44,6 +44,8 @@
 - 面板 ( panel )
 - 表格 ( table )
 - 标签 ( tab )
+- 列表 ( list )
+- 长廊 ( gallery )
 
 ***
 

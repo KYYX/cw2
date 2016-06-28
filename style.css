@@ -31,3 +31,12 @@ div.cw.panel.icon > .header {
 .cw-tab {
 	height: 200px;
 }
+
+.toGallery {
+	height: 100px;
+}
+.cw-gallery > .cw-gallery-content > ul > li {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

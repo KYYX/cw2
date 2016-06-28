@@ -84,10 +84,29 @@ module.exports = {
 		rows: [],
 	},
 
+	/*
+	 * @name 标签组件默认配置
+	 */
 	TAB: {
 		tabs: [],
-		callback: function ($currentContent) {
+		active: 1,
+		callback: function ($currentContent) { }
+	},
 
-		}
-	}
+	/*
+	 * @name 列表组件默认配置
+	 */
+	 LIST: {
+	 	clickable: false,
+	 	data: [],
+	 	callback: function ($li, data) { }
+	 },
+
+	 /*
+	 * @name 长廊组件默认配置
+	 */
+	 GALLERY: {
+	 	count: 6,
+	 	data: []
+	 }
 }

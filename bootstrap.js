@@ -114,7 +114,26 @@ $(".toTab").toTab({
 		text: '二年级',
 		content: '这是二年级'
 	}],
+	active: 2,
 	callback: function ($content, index) {
 		index === 2 && $content.html("hahaha");
 	}
+});
+
+$(".toList").toList({
+	clickable: true,
+	data: [{
+		content: 'Can you play the guitar?'
+	},{
+		content: 'What time do you go to school?'
+	},{
+		content: 'How do you go to school?'
+	}],
+	callback: function ($li, data) {
+		console.log(data);
+	}
+});
+
+$(".toGallery").toGallery({
+	data: [1,2,3,4,5,6,7,8,9,10]
 });

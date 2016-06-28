@@ -5,10 +5,19 @@ require('./jquery.mousewheel');
 //组件默认配置
 import CONFIG from './config';
 
+const str = ('abcdefghijklmnopqrstuvwxyz' + 
+			'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 
+			'1234567890').split('');
+
 var createUUID = function (digit) {
 	var _digit = digit || 4;
+	var uuid = "";
 
-	return "abcd";
+	for (var i=0; i<_digit; i++) {
+		uuid += str[~~(Math.random() * 62)];
+	}
+
+	return uuid;
 };
 
 (function ($) {
@@ -42,7 +51,8 @@ var createUUID = function (digit) {
 
 	var CW = {};
 	var COMPONENTS = ['Page',   'Scroll', 'Radio', 'Checkbox', 
-	 				  'Select', 'Panel',  'Table', 'Tab'];
+	 				  'Select', 'Panel',  'Table', 'Tab', 'List',
+	 				  'Gallery'];
 	var $ROOT, $BODY, WH, WW;
 
 	//静态变量
@@ -51,6 +61,18 @@ var createUUID = function (digit) {
 		$BODY = $("body");
 		WH = window.innerHeight;
 		WW = window.innerWidth;
+
+		$(".cw-container .cw-col").each(function () {
+			var hasId = true
+			var id;
+
+			do {
+				id = createUUID();
+				hasId = $("#" + id).length > 0 ? true : false;
+			} while (hasId);
+
+			$(this).attr('id', id);
+		});
 	});
 
 	//jQuery插件实现方法
@@ -471,7 +493,7 @@ var createUUID = function (digit) {
 					  .css("backgroundImage", cfg.icon);
 			}
 
-			$panel.children('.header').append('<span class="cw ellipsis">' + title + '</span>');
+			$panel.children('.header').append('<span class="cw-ellipsis">' + title + '</span>');
 
 			if (content instanceof jQuery) {
 				$panel.children('.content').append(content);
@@ -616,10 +638,8 @@ var createUUID = function (digit) {
 			var $contents = $tab.children('.cw-tab-contents');
 
 			cfg.tabs.forEach(function (tab, index) {
-				var id   = tab.id || createUUID();
-
-				var $tab 	 = $('<li id="' + id + '">' + tab.text + '</li>');
-				var $content = $('<div id="' + id + '-content">' + tab.content + '</div>');
+				var $tab 	 = $('<li>'  + tab.text    + '</li>');
+				var $content = $('<div>' + tab.content + '</div>');
 
 				$tab.click(function () {
 					$tabs.children('.cw-tab-active').removeClass('cw-tab-active');
@@ -636,7 +656,110 @@ var createUUID = function (digit) {
 
 			$this.empty().append($tab);
 
-			$tabs.children(':first').click();
+			$tabs.children(':eq(' + (cfg.active - 1) + ')').click();
+		}
+	})();
+
+	CW._toList = (function () {
+		var divide = '<div class="cw-list-divide"></div>';
+
+		var activeCN = 'cw-list-active';
+
+		return function ($this, cfg) {
+			var $list = $('<ul class="cw-list"></ul>');
+
+			if (cfg.clickable) {
+				$list.addClass('cw-list-clickable').on('click', 'li', function () {
+					var $this = $(this);
+
+					$list.children('.' + activeCN).removeClass(activeCN);
+					$this.addClass(activeCN);
+
+					cfg.callback($this, $this.data('data'));
+				});
+			}
+
+			cfg.data.forEach(function (data, index) {
+				if (index > 0) {
+					$list.append(divide);
+				}
+
+				var $li = $('<li></li>').data('data', data);
+
+				if (data.content instanceof jQuery) {
+					$li.append(data.content);
+				} else {
+					$li.html(data.content);
+				}
+
+				$list.append($li);
+			});
+
+
+			$this.empty().append($list);
+		}
+	})();
+
+	CW._toGallery = (function () {
+		var tpl = '<div class="cw-gallery">' +
+				  '	<i class="cw-gallery-arrow cw-gallery-arrow-prev cw-gallery-arrow-disabled"></i>' +
+				  '	<div class="cw-gallery-content"><ul></ul></div>' +
+				  '	<i class="cw-gallery-arrow cw-gallery-arrow-next cw-gallery-arrow-disabled"></i>' +
+				  '</div>';
+
+		var arrowDisabledCN = 'cw-gallery-arrow-disabled';
+
+		return function ($this, cfg) {
+			var $gallery = $(tpl);
+			var $content = $gallery.find('.cw-gallery-content');
+			var $list    = $content.children('ul');
+			var $prev    = $gallery.children('.cw-gallery-arrow-prev');
+			var $next    = $gallery.children('.cw-gallery-arrow-next');
+			var width;
+			var width2;
+			var maxIndex = Math.ceil(cfg.data.length / cfg.count);
+			var currentIndex = 0;
+
+			if (maxIndex > 1) {
+				$next.removeClass(arrowDisabledCN);
+			}
+
+			$gallery.on('click', '.cw-gallery-arrow', function () {
+				var $this = $(this);
+
+				if ($this.hasClass(arrowDisabledCN)) {
+
+				} else if ($this.hasClass('cw-gallery-arrow-next')) {
+					currentIndex += 1;
+				} else {
+					currentIndex -= 1;
+				}
+
+				if (currentIndex === 0) {
+					$prev.addClass(arrowDisabledCN);
+					$next.removeClass(arrowDisabledCN);
+				} else if (currentIndex === maxIndex - 1) {
+					$prev.removeClass(arrowDisabledCN);
+					$next.addClass(arrowDisabledCN);
+				} else {
+
+				}
+
+				$list.animate({
+					left: 0 - width * currentIndex
+				});
+			});
+
+			$this.empty().append($gallery);
+
+			width = $content.width();
+			width2 = width / cfg.count;
+
+			cfg.data.forEach(function (data, index) {
+				var $li = $('<li>' + index + '</li>').width(width2);
+
+				$list.append($li);
+			});
 		}
 	})();
 
@@ -645,7 +768,7 @@ var createUUID = function (digit) {
 	COMPONENTS.forEach(function (name) {
 		cw_extends['to' + name] = function (cfg) {
 			var NAME = name.toUpperCase();
-			var _cfg = $.extend(CONFIG[NAME], cfg);
+			var _cfg = $.extend(true, {}, CONFIG[NAME], cfg);
 
 			this.each(function () {
 				CW['_to' + name]($(this), _cfg);
