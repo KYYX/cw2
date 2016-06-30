@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>cw2 - 快速生成工具</title>
+	<link rel="stylesheet" type="text/css" href="./index.css">
+	<script type="text/javascript" src="../libs/jquery-3.0.0.min.js"></script>
+	<script type="text/javascript" src="../build/cw2.js"></script>
+	<script type="text/javascript" src="./index.js"></script>
+</head>
+<body>
+	<div id="container">
+		<div id="top" class="cw-container">
+			<div class="cw-row">
+				<div class="cw-col">模式：</div>
+				<div class="cw-col toSelect-mode"></div>
+				<div class="cw-col">布局：</div>
+				<div class="cw-col toSelect-layout"></div>
+				<div class="cw-col">主题：</div>
+				<div class="cw-col toSelect-theme"></div>
+			</div>
+		</div>
+		<div id="center">
+			<div id="left-of-center">
+				<div class="toTab-component"></div>
+			</div>
+			<div id="main">
+				<div id="main-toolbox">
+					<button class="cw-btn">预览</button>
+					<button class="cw-btn">导出</button>
+				</div>
+				<div id="main-canvas">
+					<div class="cw-container dev" id="main-root"></div>
+				</div>
+			</div>
+			<div id="right-of-center">
+				<div class="h3">已创建的组件</div>
+				<ul class="created-component-list"></ul>
+			</div>
+		</div>
+		<div id="bottom" class="cw-container"></div>
+	</div>
+</body>
+</html>

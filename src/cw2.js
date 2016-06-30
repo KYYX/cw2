@@ -633,13 +633,15 @@ var createUUID = function (digit) {
 				  '</div>';
 
 		return function ($this, cfg) {
-			var $tab  = $(tpl);
+			var id = cfg.id || createUUID();
+			var $tab  = $(tpl).attr("id", id);
 			var $tabs = $tab.children('.cw-tab-tabs');
 			var $contents = $tab.children('.cw-tab-contents');
 
 			cfg.tabs.forEach(function (tab, index) {
+				var contentId = id + "-content-" + (index + 1);
 				var $tab 	 = $('<li>'  + tab.text    + '</li>');
-				var $content = $('<div>' + tab.content + '</div>');
+				var $content = $('<div id="' + contentId + '">' + (tab.content || "") + '</div>');
 
 				$tab.click(function () {
 					$tabs.children('.cw-tab-active').removeClass('cw-tab-active');
@@ -856,7 +858,8 @@ var createUUID = function (digit) {
 	$.extend({
 		cw: {
 			alert: toAlert,
-			confirm: toConfirm
+			confirm: toConfirm,
+			uuid: createUUID
 		}
 	});
 })(jQuery);
