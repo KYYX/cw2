@@ -6,6 +6,197 @@ $(function () {
 	var $main = $("#main");
 	var $mainRoot = $("#main-root");
 
+	var $highlight = $(".cover-highlight");
+
+	var capitalize = function (str) {
+		var cap = str[0].toUpperCase();
+
+		return cap + str.substring(1);
+	};
+
+	var createComponent = function ($this) {
+		var id = $.cw.uuid();
+		var role = current.role;
+
+		if (role === "col") {
+			$.cw.alert("&lt;Col&gt;里面不能嵌套&lt;Col&gt;");
+		} else if (role === "row") {
+			$this.append('<div class="cw-row" id="' + id + '"></div>');
+		} else {
+			if (role === "radio") {
+				$this.toRadio({
+					id: id,
+					arrange: "-",
+					data: [{
+						value: "apple",
+						name: "苹果"
+					},{
+						value: "banana",
+						name: "香蕉"
+					},{
+						value: "pear",
+						name: "梨子"
+					}],
+					callback: function (checked) {
+						console.log(checked);
+					}
+				});
+			} else if (role === "checkbox") {
+				$this.toCheckbox({
+					id: id,
+					data: [{
+						value: "footbal",
+						name: "足球"
+					},{
+						value: "basketball",
+						name: "篮球"
+					},{
+						value: "volleyball",
+						name: "排球"
+					}],
+					allBtn: true,
+					callback: function (checkeds) {
+						console.log(checkeds);
+					}
+				});
+			} else if (role === "select") {
+				$this.toSelect({
+					id: id,
+					data: [{
+						value: "footbal",
+						name: "足球"
+					},{
+						value: "basketball",
+						name: "篮球"
+					},{
+						value: "volleyball",
+						name: "排球"
+					}],
+					callback: function (checkeds) {
+						console.log(checkeds);
+					}
+				});
+			} else if (role === "table") {
+				$this.toTable({
+					id: id,
+					mode: 2,
+					cols: [{
+						key:  'name',
+						text: '作业名称',
+						type: 'url'
+					}, {
+						key:  'time',
+						text: '提交时间'
+					}, {
+						key:  'score',
+						text: '成绩'
+					}, {
+						key:  'time2',
+						text: '完成时长'
+					}],
+					rows: [{
+						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
+					},{
+						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
+					},{
+						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
+					}]
+				});
+			} else if (role === "page") {
+				$this.toPage({
+					id: id,
+					max: 10
+				});
+			} else if (role === "scroll") {
+				//TODO
+			} else if (role === "panel") {
+				$this.toPanel({
+					id: id,
+					icon: 	 "./images/icon_check.png",
+					title: 	 "这是一个带icon的Panel组件",
+					content: "我是panel的content部分",
+					btns: [{
+						name: "确定",
+						callback: function () {
+							alert("确定");
+						}
+					}, {
+						name: "取消"
+					}]
+				});
+			} else if (role === "tab") {
+				$this.toTab({
+					id: id,
+					tabs: [{
+						text: '一年级',
+						content: '这是一年级'
+					},{
+						text: '二年级',
+						content: '这是二年级'
+					}],
+					active: 2,
+					callback: function ($content, index) {
+						index === 2 && $content.html("hahaha");
+					}
+				});
+			} else if (role === "list") {
+				$this.toList({
+					id: id,
+					clickable: true,
+					data: [{
+						content: 'Can you play the guitar?'
+					},{
+						content: 'What time do you go to school?'
+					},{
+						content: 'How do you go to school?'
+					}],
+					callback: function ($li, data) {
+						console.log(data);
+					}
+				});
+			} else if (role === "gallery") {
+				$this.toGallery({
+					id: id,
+					data: [1,2,3,4,5,6,7,8,9,10]
+				});
+			} else {
+				return console.warn('unknown component <' + role + '>, please feedback to <337487652@qq.com>');
+			}
+
+			addColCover($this);
+			addCreatedComponentList(id, role);
+		}
+	};
+
+	var replaceComponent = function ($target) {
+		if ($target.is(':empty')) {
+			createComponent($target);
+		} else {
+			$.cw.confirm('确定替换该区域内的组件？', function (flag) {
+				if (flag) {
+					var id = $target.children(":first").attr('id');
+					removeCreatedComponentList(id);
+					createComponent($target);
+				}
+			});
+		}
+	};
+
+	var addColCover = function ($this) {
+		$this.append("<div class='cover-col'></div>");
+	};
+
+	var addCreatedComponentList = function (id, role) {
+		$createdComponentList.append('<li id="created-' + id + '" data-role="' + role + '">' +
+									 '	<span>' + capitalize(role) + ' ( #' + id + ' )</span>' +
+									 '	<i></i>' +
+									 '</li>');
+	};
+
+	var removeCreatedComponentList = function (id) {
+		$("#created-" + id).remove();
+	};
+
 	$(".toSelect-mode").toSelect({
 		data: [{
 			value: "dev",
@@ -167,172 +358,128 @@ $(function () {
 		}
 	});
 
+	//高亮已创建的组件
+	$createdComponentList.on('mouseenter', 'li', function () {
+		var id   = $(this).attr('id').replace('created-', '');
+		var role = $(this).data('role');
+
+		var $target = $("#" + id);
+
+		var BCR = $target[0].getBoundingClientRect();
+
+		if (role === "row" || role === "col") {
+			$highlight.css({
+				left:   BCR.left - 8,
+				top:    BCR.top - 8,
+				width:  BCR.width,
+				height: BCR.height
+			}).addClass('show');
+		} else {
+			$target.addClass('highlight');
+		}
+	});
+
+	//去高亮已创建的组件
+	$createdComponentList.on('mouseleave', 'li', function () {
+		var id   = $(this).attr('id').replace('created-', '');
+		var role = $(this).data('role');
+
+		var $target = $("#" + id);
+
+		if (role === "row" || role === "col") {
+			$highlight.removeClass('show');
+		} else {
+			$target.removeClass('highlight');
+		}
+	});
+
+	//删除已创建组件
+	$createdComponentList.on('click', 'li > i', function () {
+		var $parent = $(this).parent();
+		var id 	 = $parent.attr('id').replace('created-', '');
+		var role = $parent.data('role');
+
+		var confirmText = "确定删除该组件？";
+
+		if ((role === "row" || role === "col") && !$("#" + id).is(":empty")) {
+			confirmText = "确定删除该组件（该组件下已包含其他组件）？"
+		}
+
+		$.cw.confirm(confirmText, function (flag) {
+			console.log('删除...' + id);
+		});
+	});
+
 	//点击主面板创建Row
 	$main.click(function () {
-		if (current && current.role === "row") {
-			$mainRoot.append('<div class="cw-row"></div>');
+		if (current) {
+			if (current.role === "row") {
+				var id = $.cw.uuid();
 
-			$createdComponentList.append('<li>' + current.role + ' ( #' + $.cw.uuid() + ' ) </li>')
-		} else {
-			$.cw.alert("请先在左侧选择行(Row)组件");
-		}
+				$mainRoot.append('<div class="cw-row" id="' + id + '"></div>');
+
+				addCreatedComponentList(id, current.role);
+			} else {
+				$.cw.alert("主面板只能添加&lt;Row&gt;组件");
+			}
+		} else { }
 	});
 
 	//Row里面只能创建Col
 	$("#main-root").on('click', '.cw-row', function () {
 		var $this = $(this);
 
-		if (current && current.role === "col") {
-			$this.append('<div class="cw-col ' + current.width + '"></div>');
-		} else {
-			$.cw.alert("您当前选择的" + current.role + "组件，不被该容器所接受");
-		}
+		if (current) {
+			if (current.role === "col") {
+				var id = $.cw.uuid();
+
+				$this.append('<div class="cw-col ' + current.width + '" id="' + id + '"></div>');
+
+				addCreatedComponentList(id, current.role);
+			} else {
+				$.cw.alert("&lt;Row&gt;里面只能添加&lt;Col&gt;");
+			}
+		} else { }
 
 		return false;
 	});
 
 	//Col面可以创建除Col以外的所有组件
 	$("#main-root").on('click', '.cw-col', function () {
-		var $this = $(this);
+		if (current) {
+			var $target = $(this);
+
+			replaceComponent($target);
+			// if ($target.is(':empty')) {
+			// 	createComponent($target);
+			// } else {
+			// 	$.cw.confirm('确定替换该区域内的组件？', function (flag) {
+			// 		if (flag) {
+			// 			createComponent($target);
+			// 		}
+			// 	});
+			// }
+		} else { }
+
+		return false;
+	});
+
+	$("#main-root").on('click', '.cover-col', function () {
 
 		if (current) {
-			var role = current.role;
+			var $target = $(this).parent('.cw-col');
 
-			if (role === "row") {
-				$this.append('<div class="cw-row"></div>');
-			} else if (role === "radio") {
-				$this.toRadio({
-					arrange: "-",
-					data: [{
-						value: "apple",
-						name: "苹果"
-					},{
-						value: "banana",
-						name: "香蕉"
-					},{
-						value: "pear",
-						name: "梨子"
-					}],
-					callback: function (checked) {
-						console.log(checked);
-					}
-				});
-			} else if (role === "checkbox") {
-				$this.toCheckbox({
-					data: [{
-						value: "footbal",
-						name: "足球"
-					},{
-						value: "basketball",
-						name: "篮球"
-					},{
-						value: "volleyball",
-						name: "排球"
-					}],
-					allBtn: true,
-					callback: function (checkeds) {
-						console.log(checkeds);
-					}
-				});
-			} else if (role === "select") {
-				$this.toSelect({
-					data: [{
-						value: "footbal",
-						name: "足球"
-					},{
-						value: "basketball",
-						name: "篮球"
-					},{
-						value: "volleyball",
-						name: "排球"
-					}],
-					callback: function (checkeds) {
-						console.log(checkeds);
-					}
-				});
-			} else if (role === "table") {
-				$this.toTable({
-					mode: 2,
-					cols: [{
-						key:  'name',
-						text: '作业名称',
-						type: 'url'
-					}, {
-						key:  'time',
-						text: '提交时间'
-					}, {
-						key:  'score',
-						text: '成绩'
-					}, {
-						key:  'time2',
-						text: '完成时长'
-					}],
-					rows: [{
-						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
-					},{
-						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
-					},{
-						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
-					}]
-				});
-			} else if (role === "page") {
-				$this.toPage({
-					max: 10
-				});
-			} else if (role === "scroll") {
-				//TODO
-			} else if (role === "panel") {
-				$this.toPanel({
-					icon: 	 "./images/icon_check.png",
-					title: 	 "这是一个带icon的Panel组件",
-					content: "我是panel的content部分",
-					btns: [{
-						name: "确定",
-						callback: function () {
-							alert("确定");
-						}
-					}, {
-						name: "取消"
-					}]
-				});
-			} else if (role === "tab") {
-				$this.toTab({
-					tabs: [{
-						text: '一年级',
-						content: '这是一年级'
-					},{
-						text: '二年级',
-						content: '这是二年级'
-					}],
-					active: 2,
-					callback: function ($content, index) {
-						index === 2 && $content.html("hahaha");
-					}
-				});
-			} else if (role === "list") {
-				$this.toList({
-					clickable: true,
-					data: [{
-						content: 'Can you play the guitar?'
-					},{
-						content: 'What time do you go to school?'
-					},{
-						content: 'How do you go to school?'
-					}],
-					callback: function ($li, data) {
-						console.log(data);
-					}
-				});
-			} else if (role === "gallery") {
-				$this.toGallery({
-					data: [1,2,3,4,5,6,7,8,9,10]
-				});
-			} else {
-				$.cw.alert("您当前选择的" + role + "组件，不被该容器所接受");
-			}
-		} else {
-			$.cw.alert("请先在左右选择组件");
-		}
+			replaceComponent($target);
+			// if ($target.is(':empty')) {
+			// 	createComponent($target);
+			// } else {
+			// 	$.cw.confirm('确定替换该区域内的组件？', function (flag) {
+			// 		if (flag) {
+			// 			createComponent($target);
+			// 		}
+			// 	});
+			// }
+		} else { }
 
 		return false;
 	});

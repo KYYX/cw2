@@ -132,8 +132,9 @@ var createUUID = function (digit) {
 		}
 
 		return function ($this, cfg) {
+			var id 	  = cfg.id || createUUID();
 			var cur   = cfg.cur;
-			var $page = $("<ul class='cw page'></ul>");
+			var $page = $("<ul class='cw page' id='" + id + "'></ul>");
 			var args  = [$page, cur, cfg.max, cfg.callback, cfg.auto];
 
 			$page.on("click", "li.page", function () {
@@ -266,7 +267,9 @@ var createUUID = function (digit) {
 		};
 
 		return function ($this, cfg, replace) {
-			var $radio = $("<div class='cw radio'></div>");
+			var id = cfg.id || createUUID();
+
+			var $radio = $("<div class='cw radio' id='" + id + "'></div>");
 
 			var checkedIndex = -1;
 
@@ -323,9 +326,10 @@ var createUUID = function (digit) {
 		};
 
 		return function ($this, cfg) {
+			var id 	   = cfg.id || createUUID();
 			var allBtn = cfg.allBtn;
 
-			var $checkbox = $("<div class='cw checkbox'></div>");
+			var $checkbox = $("<div class='cw checkbox' id='" + id + "'></div>");
 
 			var checkedIndexes = [];
 
@@ -414,7 +418,9 @@ var createUUID = function (digit) {
 				        '</div>';
 
 		return function ($this, cfg) {
-			var $select = $(selectTpl);
+			var id = cfg.id || createUUID();
+
+			var $select = $(selectTpl).attr('id', id);
 			var $div 	= $select.children('div');
 			var $p   	= $select.find('p');
 			var $ul  	= $select.children('ul');
@@ -480,11 +486,12 @@ var createUUID = function (digit) {
 				  '</div>';
 
 		return function ($this, cfg) {
+			var id 	    = cfg.id || createUUID();
 			var title   = cfg.title;
 			var content = cfg.content;
 			var btns    = cfg.btns;
 
-			var $panel = $(tpl);
+			var $panel = $(tpl).attr('id', id);
 
 			var $footer = $panel.children('.footer');
 
@@ -532,6 +539,7 @@ var createUUID = function (digit) {
 		var checkboxCheckedClassName = 'cw-table-checkbox-checked';
 
 		return function ($this, cfg) {
+			var id 	  = cfg.id || createUUID();
 			var mode  = cfg.mode;
 			var align = cfg.align;
 			var cols  = cfg.cols;
@@ -539,7 +547,7 @@ var createUUID = function (digit) {
 
 			var keyList = [];
 
-			var $table = $(tpl);
+			var $table = $(tpl).attr('id', id);
 			var $thead = $table.children('thead').children('tr:first');
 			var $tbody = $table.children('tbody');
 			var $checkboxAll;
@@ -634,6 +642,7 @@ var createUUID = function (digit) {
 
 		return function ($this, cfg) {
 			var id = cfg.id || createUUID();
+
 			var $tab  = $(tpl).attr("id", id);
 			var $tabs = $tab.children('.cw-tab-tabs');
 			var $contents = $tab.children('.cw-tab-contents');
@@ -668,7 +677,9 @@ var createUUID = function (digit) {
 		var activeCN = 'cw-list-active';
 
 		return function ($this, cfg) {
-			var $list = $('<ul class="cw-list"></ul>');
+			var id = cfg.id || createUUID();
+
+			var $list = $('<ul class="cw-list" id="' + id + '"></ul>');
 
 			if (cfg.clickable) {
 				$list.addClass('cw-list-clickable').on('click', 'li', function () {
@@ -712,7 +723,9 @@ var createUUID = function (digit) {
 		var arrowDisabledCN = 'cw-gallery-arrow-disabled';
 
 		return function ($this, cfg) {
-			var $gallery = $(tpl);
+			var id = cfg.id || createUUID();
+
+			var $gallery = $(tpl).attr('id', id);
 			var $content = $gallery.find('.cw-gallery-content');
 			var $list    = $content.children('ul');
 			var $prev    = $gallery.children('.cw-gallery-arrow-prev');
@@ -819,7 +832,7 @@ var createUUID = function (digit) {
 	var toConfirm = (function () {
 		var _callback = function () {};
 
-		var $confirm = $('<div class="cw confirm">' +
+		var $confirm = $('<div class="cw-confirm">' +
 					   '	<div>' +
 					   '		<div>这只是一个确认框</div>' +
 					   '		<button class="ok">好的</button>' +
