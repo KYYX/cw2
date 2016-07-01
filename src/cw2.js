@@ -162,7 +162,7 @@ var createUUID = function (digit) {
 
 			args[4] = true;
 
-			$this.empty().append($page);
+			$this.append($page);
 		}
 	})();
 
@@ -173,8 +173,11 @@ var createUUID = function (digit) {
 	  		var $outerNode = $this,
 	  			$innerNode = $this.children(":first");
 
+	  		//移除事件
 	  		$outerNode.addClass("cw scroll outer").unbind('mousewheel');
 	  		$innerNode.addClass("cw scroll inner").css("top", 0);
+
+	  		//删除滚动体
 	        $outerNode.children(".cw.scroll-outer").remove();
 
 	        var outerHeight = $outerNode.height();
@@ -251,11 +254,8 @@ var createUUID = function (digit) {
 
 			$.each(data, function (index, obj) {
 				var name  = obj.name;
-				// var value = obj.value;
 				var $one  = $('<div>'+name+'</div>');
 
-				// $one.data('value', value);
-				// $one.data('name' , name);
 				$one.data('index', index);
 
 				if (index === checkedIndex) {
@@ -292,8 +292,6 @@ var createUUID = function (digit) {
 			$radio.on('click', 'div', function (event) {
 				var $this = $(this);
 				var index = $this.data("index");
-				// var value = $this.data("value");
-				// var name  = $this.data("name");
 
 				checkedIndex = index;
 
@@ -304,7 +302,7 @@ var createUUID = function (digit) {
 
 			render($radio, cfg.data, checkedIndex);
 
-			$this.empty().append($radio);
+			$this.append($radio);
 		}
 	})();
 
@@ -407,7 +405,7 @@ var createUUID = function (digit) {
 
 			render($checkbox, cfg.data, checkedIndexes);
 
-			$this.empty().append($checkbox);
+			$this.append($checkbox);
 		}
 	})();
 
@@ -472,7 +470,7 @@ var createUUID = function (digit) {
 
 			$p.html(cfg.data[checkedIndex].name);
 
-			$this.empty().append($select);
+			$this.append($select);
 		}
 	})();
 
@@ -630,7 +628,7 @@ var createUUID = function (digit) {
 				$tbody.append($tr);
 			});
 
-			$this.empty().append($table);
+			$this.append($table);
 		}
 	})();
 
@@ -665,7 +663,7 @@ var createUUID = function (digit) {
 				$contents.append($content);
 			});
 
-			$this.empty().append($tab);
+			$this.append($tab);
 
 			$tabs.children(':eq(' + (cfg.active - 1) + ')').click();
 		}
@@ -709,7 +707,7 @@ var createUUID = function (digit) {
 			});
 
 
-			$this.empty().append($list);
+			$this.append($list);
 		}
 	})();
 
@@ -726,7 +724,7 @@ var createUUID = function (digit) {
 			var id = cfg.id || createUUID();
 
 			var $gallery = $(tpl).attr('id', id);
-			var $content = $gallery.find('.cw-gallery-content');
+			var $content = $gallery.find('.cw-gallery-content').height(cfg.height);
 			var $list    = $content.children('ul');
 			var $prev    = $gallery.children('.cw-gallery-arrow-prev');
 			var $next    = $gallery.children('.cw-gallery-arrow-next');
@@ -765,7 +763,7 @@ var createUUID = function (digit) {
 				});
 			});
 
-			$this.empty().append($gallery);
+			$this.append($gallery);
 
 			width = $content.width();
 			width2 = width / cfg.count;

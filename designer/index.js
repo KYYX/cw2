@@ -1,11 +1,16 @@
+/*
+ * 暂时没有滚动条(Scroll)的演示支持
+ */
+
 $(function () {
 	var current;
+
 	var $toListLayout;
 	var $toListComponent;
 	var $createdComponentList = $(".created-component-list");
 	var $main = $("#main");
 	var $mainRoot = $("#main-root");
-
+	var $listOfCreated = $(".list-of-created");
 	var $highlight = $(".cover-highlight");
 
 	var capitalize = function (str) {
@@ -22,21 +27,14 @@ $(function () {
 			$.cw.alert("&lt;Col&gt;里面不能嵌套&lt;Col&gt;");
 		} else if (role === "row") {
 			$this.append('<div class="cw-row" id="' + id + '"></div>');
+
+			addCreatedComponentList(id, role);
 		} else {
 			if (role === "radio") {
 				$this.toRadio({
 					id: id,
 					arrange: "-",
-					data: [{
-						value: "apple",
-						name: "苹果"
-					},{
-						value: "banana",
-						name: "香蕉"
-					},{
-						value: "pear",
-						name: "梨子"
-					}],
+					data: DS.radio,
 					callback: function (checked) {
 						console.log(checked);
 					}
@@ -44,16 +42,7 @@ $(function () {
 			} else if (role === "checkbox") {
 				$this.toCheckbox({
 					id: id,
-					data: [{
-						value: "footbal",
-						name: "足球"
-					},{
-						value: "basketball",
-						name: "篮球"
-					},{
-						value: "volleyball",
-						name: "排球"
-					}],
+					data: DS.checkbox,
 					allBtn: true,
 					callback: function (checkeds) {
 						console.log(checkeds);
@@ -62,16 +51,7 @@ $(function () {
 			} else if (role === "select") {
 				$this.toSelect({
 					id: id,
-					data: [{
-						value: "footbal",
-						name: "足球"
-					},{
-						value: "basketball",
-						name: "篮球"
-					},{
-						value: "volleyball",
-						name: "排球"
-					}],
+					data: DS.select,
 					callback: function (checkeds) {
 						console.log(checkeds);
 					}
@@ -80,35 +60,14 @@ $(function () {
 				$this.toTable({
 					id: id,
 					mode: 2,
-					cols: [{
-						key:  'name',
-						text: '作业名称',
-						type: 'url'
-					}, {
-						key:  'time',
-						text: '提交时间'
-					}, {
-						key:  'score',
-						text: '成绩'
-					}, {
-						key:  'time2',
-						text: '完成时长'
-					}],
-					rows: [{
-						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
-					},{
-						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
-					},{
-						name: 'Unit 1', href: '#', time: '2016-6-12', score: '100', time2: '6 min'
-					}]
+					cols: DS.table.cols,
+					rows: DS.table.rows
 				});
 			} else if (role === "page") {
 				$this.toPage({
 					id: id,
 					max: 10
 				});
-			} else if (role === "scroll") {
-				//TODO
 			} else if (role === "panel") {
 				$this.toPanel({
 					id: id,
@@ -127,13 +86,7 @@ $(function () {
 			} else if (role === "tab") {
 				$this.toTab({
 					id: id,
-					tabs: [{
-						text: '一年级',
-						content: '这是一年级'
-					},{
-						text: '二年级',
-						content: '这是二年级'
-					}],
+					tabs: DS.tab,
 					active: 2,
 					callback: function ($content, index) {
 						index === 2 && $content.html("hahaha");
@@ -143,13 +96,7 @@ $(function () {
 				$this.toList({
 					id: id,
 					clickable: true,
-					data: [{
-						content: 'Can you play the guitar?'
-					},{
-						content: 'What time do you go to school?'
-					},{
-						content: 'How do you go to school?'
-					}],
+					data: DS.list,
 					callback: function ($li, data) {
 						console.log(data);
 					}
@@ -157,17 +104,19 @@ $(function () {
 			} else if (role === "gallery") {
 				$this.toGallery({
 					id: id,
-					data: [1,2,3,4,5,6,7,8,9,10]
+					data: DS.gallery
 				});
 			} else {
 				return console.warn('unknown component <' + role + '>, please feedback to <337487652@qq.com>');
 			}
 
-			addColCover($this);
+			$("#" + id).wrap('<div class="component-wrap"></div>');
+			// addColCover($this, id);
 			addCreatedComponentList(id, role);
 		}
 	};
 
+	/*
 	var replaceComponent = function ($target) {
 		if ($target.is(':empty')) {
 			createComponent($target);
@@ -181,16 +130,32 @@ $(function () {
 			});
 		}
 	};
+	
+	var addColCover = function ($this, id) {
+		var BCR = document.querySelector("#" + id).getBoundingClientRect();
+		var $coverCol = $("<div class='cover-col'></div>");
 
-	var addColCover = function ($this) {
-		$this.append("<div class='cover-col'></div>");
+		$coverCol.css({
+			left:   BCR.left - 8,
+			top:    BCR.top - 8,
+			width:  BCR.width,
+			height: BCR.height
+		});
+
+		$this.append($coverCol);
 	};
+	*/
 
 	var addCreatedComponentList = function (id, role) {
 		$createdComponentList.append('<li id="created-' + id + '" data-role="' + role + '">' +
 									 '	<span>' + capitalize(role) + ' ( #' + id + ' )</span>' +
-									 '	<i></i>' +
+									 '	<i title="Delete">x</i>' +
+									 '	<div></div>' +
 									 '</li>');
+
+		$listOfCreated.toScroll({
+			gap: 33
+		});
 	};
 
 	var removeCreatedComponentList = function (id) {
@@ -262,43 +227,43 @@ $(function () {
 			width: 'auto',
 			role: 'col'
 		},{
-			content: '列 ( 1/12 宽 )',
+			content: '列 ( &nbsp;&nbsp;1/12 宽 )',
 			width: 'w1',
 			role: 'col'
 		},{
-			content: '列 ( 1/6 宽 )',
+			content: '列 ( &nbsp;&nbsp;2/12 宽 )',
 			width: 'w2',
 			role: 'col'
 		},{
-			content: '列 ( 1/4 宽 )',
+			content: '列 ( &nbsp;&nbsp;3/12 宽 )',
 			width: 'w3',
 			role: 'col'
 		},{
-			content: '列 ( 1/3 宽 )',
+			content: '列 ( &nbsp;&nbsp;4/12 宽 )',
 			width: 'w4',
 			role: 'col'
 		},{
-			content: '列 ( 5/12 宽 )',
+			content: '列 ( &nbsp;&nbsp;5/12 宽 )',
 			width: 'w5',
 			role: 'col'
 		},{
-			content: '列 ( 1/2 宽 )',
+			content: '列 ( &nbsp;&nbsp;6/12 宽 )',
 			width: 'w6',
 			role: 'col'
 		},{
-			content: '列 ( 7/12 宽 )',
+			content: '列 ( &nbsp;&nbsp;7/12 宽 )',
 			width: 'w7',
 			role: 'col'
 		},{
-			content: '列 ( 2/3 宽 )',
+			content: '列 ( &nbsp;&nbsp;8/12 宽 )',
 			width: 'w8',
 			role: 'col'
 		},{
-			content: '列 ( 3/4 宽 )',
+			content: '列 ( &nbsp;&nbsp;9/12 宽 )',
 			width: 'w9',
 			role: 'col'
 		},{
-			content: '列 ( 5/6 宽 )',
+			content: '列 ( 10/12 宽 )',
 			width: 'w10',
 			role: 'col'
 		},{
@@ -335,9 +300,6 @@ $(function () {
 		},{
 			content: '分页 ( Page )',
 			role: 'page'
-		},{
-			content: '滚动条 ( Scroll )',
-			role: 'scroll'
 		},{
 			content: '面板 ( Panel )',
 			role: 'panel'
@@ -406,7 +368,17 @@ $(function () {
 		}
 
 		$.cw.confirm(confirmText, function (flag) {
-			console.log('删除...' + id);
+			if (flag) {
+				var $parent = $("#" + id).parent('.component-wrap');
+				
+				if ($parent.length > 0) {
+					$parent.remove();
+				} else {
+					$("#" + id).remove();
+				}
+
+				removeCreatedComponentList(id);
+			} else { }
 		});
 	});
 
@@ -449,40 +421,25 @@ $(function () {
 		if (current) {
 			var $target = $(this);
 
-			replaceComponent($target);
-			// if ($target.is(':empty')) {
-			// 	createComponent($target);
-			// } else {
-			// 	$.cw.confirm('确定替换该区域内的组件？', function (flag) {
-			// 		if (flag) {
-			// 			createComponent($target);
-			// 		}
-			// 	});
-			// }
+			createComponent($target);
 		} else { }
 
 		return false;
 	});
 
+	/*
 	$("#main-root").on('click', '.cover-col', function () {
 
 		if (current) {
 			var $target = $(this).parent('.cw-col');
 
-			replaceComponent($target);
-			// if ($target.is(':empty')) {
-			// 	createComponent($target);
-			// } else {
-			// 	$.cw.confirm('确定替换该区域内的组件？', function (flag) {
-			// 		if (flag) {
-			// 			createComponent($target);
-			// 		}
-			// 	});
-			// }
+			// replaceComponent($target);
+			createComponent($target);
 		} else { }
 
 		return false;
 	});
+	*/
 
 	//参数赋值
 	$toListLayout 	 = $("#tab-of-component-content-1 > .cw-list");

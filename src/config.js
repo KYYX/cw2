@@ -106,6 +106,7 @@ module.exports = {
 	 * @name 长廊组件默认配置
 	 */
 	 GALLERY: {
+	 	height: 100,
 	 	count: 6,
 	 	data: []
 	 }

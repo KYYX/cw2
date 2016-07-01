@@ -1,6 +1,7 @@
 * {
 	padding: 0;
 	margin: 0;
+	font-size: 14px;
 }
 
 body {
@@ -17,13 +18,13 @@ body {
 	left: 0;
 	z-index: 999;
 	display: none;
-	/*background-color: rgba(255,255,0,.3)!important;*/
 	border: 8px solid yellow;
 }
 .cover-highlight.show {
 	display: block;
 }
 
+/*
 .cover-col {
 	position: absolute;
 	top:  0;
@@ -31,8 +32,21 @@ body {
 	z-index: 2;
 	width:  100%;
 	height: 100%;
-	background-color: rgba(255,255,255,.7);
 }
+*/
+.component-wrap {
+	position: relative;
+}
+
+.component-wrap:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
 
 
 
@@ -70,6 +84,18 @@ body {
 	margin-right: 32px;
 }
 
+#top input {
+	width: 46px;
+	padding: 0 8px;
+	border: 1px solid #dbdcde;
+	line-height: 28px;
+	text-align: center;
+}
+
+
+
+
+
 #center {
 	display: flex;
 	height: 660px;
@@ -91,31 +117,60 @@ body {
 	width: 200px;
 }
 
+#right-of-center .list-of-created {
+	height: 618px;
+}
+
 #right-of-center .created-component-list {
 	list-style-type: none;
 }
 
 #right-of-center .created-component-list > li {
+	position: relative;
 	padding-left:  24px;
-	padding-right: 24px;
+	padding-right: 8px;
+	border-bottom: 1px solid #e0e0e0;
 	line-height:   32px;
+	cursor: default;
 }
-
+#right-of-center .created-component-list > li:last-child {
+	border-bottom: 0;
+}
+/*
 #right-of-center .created-component-list > li:nth-child(2n) {
 	background-color: #e9e9e9;
 }
-
+*/
 #right-of-center .created-component-list > li > i {
 	float:  right;
 	display: none;
 	width:  16px;
-	height: 16px;
-	margin: 8px 0;
-	background-color: #e0e0e0;
+	height: 20px;
+	margin: 6px 0;
+    color: red;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: bold;
+    text-align: center;
+	line-height: 20px;
+	/*background-color: #e0e0e0;*/
 	cursor: pointer;
 }
 
 #right-of-center .created-component-list > li:hover > i {
+	display: block;
+}
+
+#right-of-center .created-component-list > li > div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+	width: 8px;
+	height: 100%;
+	background-color: #21bd73;
+}
+#right-of-center .created-component-list > li:hover > div {
 	display: block;
 }
 
@@ -137,7 +192,9 @@ body {
 }
 
 #main-canvas {
-	flex: 1
+	flex: 1;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 #main-root {
@@ -147,6 +204,10 @@ body {
 
 #main-root:empty {
 	padding: 0;
+}
+
+#main-root {
+	background-color: #fff;
 }
 
 #main-root .cw-row,
@@ -176,8 +237,15 @@ body {
 
 #bottom {
 	position: relative;
-	z-index: 2;
-	/*height: 64px;*/
+	z-index: 1000;
 	flex: 1;
+    display: flex;
+	align-items: center;
+    justify-content: center;
 	box-shadow: 0 -3px 3px #a9a9a9;
+}
+
+#bottom > span {
+	color: gray;
+	font-size: 20px;
 }
