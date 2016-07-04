@@ -1,15 +1,21 @@
 /*
  * 暂时没有滚动条(Scroll)的演示支持
+ * 有部分全局变量，会污染环境
  */
 
+var current2; //当前配置组件 {id:, role:}
+
 $(function () {
-	var current;
+	var current;  //当前创建的组件 {id:, role: }
+	var createdConfig = {}; //已创建的组件的属性配置
+	var createdComponentConfig = {}; //已创建的组件属性
 
 	var $toListLayout;
 	var $toListComponent;
 	var $createdComponentList = $(".created-component-list");
 	var $main = $("#main");
 	var $mainRoot = $("#main-root");
+	var $bottom = $("#bottom");
 	var $listOfCreated = $(".list-of-created");
 	var $highlight = $(".cover-highlight");
 
@@ -30,6 +36,21 @@ $(function () {
 
 			addCreatedComponentList(id, role);
 		} else {
+			try {
+				var componentConfig = $.extend(true, {id: id}, CONFIG_COMPONENT[role.toUpperCase()], DS[role]);
+
+				$this["to" + capitalize(role)](componentConfig);
+
+				$("#" + id).wrap('<div class="component-wrap"></div>');
+
+				createdComponentConfig[id] = componentConfig;
+			
+				addCreatedComponentList(id, role);
+			} catch (e) {
+				return console.warn('unknown component <' + role + '>, please feedback to <337487652@qq.com>');
+			}
+
+			/*
 			if (role === "radio") {
 				$this.toRadio({
 					id: id,
@@ -111,40 +132,18 @@ $(function () {
 			}
 
 			$("#" + id).wrap('<div class="component-wrap"></div>');
-			// addColCover($this, id);
+			
 			addCreatedComponentList(id, role);
+			*/
 		}
 	};
 
-	/*
-	var replaceComponent = function ($target) {
-		if ($target.is(':empty')) {
-			createComponent($target);
-		} else {
-			$.cw.confirm('确定替换该区域内的组件？', function (flag) {
-				if (flag) {
-					var id = $target.children(":first").attr('id');
-					removeCreatedComponentList(id);
-					createComponent($target);
-				}
-			});
-		}
-	};
-	
-	var addColCover = function ($this, id) {
-		var BCR = document.querySelector("#" + id).getBoundingClientRect();
-		var $coverCol = $("<div class='cover-col'></div>");
+	//编辑组件属性后，重绘组件
+	var rerenderComponent = function (componentConfig) {
+		$("#" + current2.id).remove();
 
-		$coverCol.css({
-			left:   BCR.left - 8,
-			top:    BCR.top - 8,
-			width:  BCR.width,
-			height: BCR.height
-		});
-
-		$this.append($coverCol);
+		$parent["to" + capitalize(current2.role)](componentConfig);
 	};
-	*/
 
 	var addCreatedComponentList = function (id, role) {
 		$createdComponentList.append('<li id="created-' + id + '" data-role="' + role + '">' +
@@ -156,6 +155,8 @@ $(function () {
 		$listOfCreated.toScroll({
 			gap: 33
 		});
+
+		createdConfig[id] = $.extend(true, [], CONFIG[role]);
 	};
 
 	var removeCreatedComponentList = function (id) {
@@ -427,21 +428,108 @@ $(function () {
 		return false;
 	});
 
-	/*
-	$("#main-root").on('click', '.cover-col', function () {
-
-		if (current) {
-			var $target = $(this).parent('.cw-col');
-
-			// replaceComponent($target);
-			createComponent($target);
-		} else { }
-
-		return false;
-	});
-	*/
-
 	//参数赋值
 	$toListLayout 	 = $("#tab-of-component-content-1 > .cw-list");
 	$toListComponent = $("#tab-of-component-content-2 > .cw-list");
+
+	//点击右侧<li/>
+	$createdComponentList.on('click', 'li', function () {
+		current2 = null;
+
+		var $this = $(this);
+
+		$bottom.empty().removeClass('empty');
+
+		if ($this.hasClass('active')) {
+			$this.removeClass('active');
+			$bottom.addClass('empty').append('<span>请在【已创建的组件】中选择组件</span>');
+		} else {
+			$createdComponentList.children('.active').removeClass('active');
+			$this.addClass('active');
+
+			var id   = $this.attr('id').replace('created-', '');
+			var role = $this.data('role');
+
+			var configs = createdConfig[id];
+
+			var $row;
+
+			if (configs instanceof Array && configs.length > 0) {
+				var componentConfig = createdComponentConfig[id]; //当前编辑组件的属性
+
+				current2 = {
+					id: id,
+					role: role
+				};
+
+				configs.forEach(function (config, index) {
+					var type = config.type;
+					var key  = config.key;
+
+					if (index % 3 === 0) {
+						$row = $('<div class="cw-row"></div>');
+						$bottom.append($row);
+					}
+
+					var $parent = $("#" + current2.id).parent();
+
+					var $text = $('<div class="cw-col w2 cw-text-right">' + config.text + '：</div>');
+					var $cfg  = $('<div class="cw-col w2"></div>');
+
+					if (type === "text") {
+						var fromSource = !!config.source;
+
+						var $input = $('<input type="text" value="' + config.value + '" />');
+
+						$cfg.append($input);
+
+						$input.change(function () {
+							var data = this.value;
+
+							if (fromSource) {
+								data = DS_CUSTOM[data];
+								
+								if (!data) {
+									return $.cw.alert('数据源【' + this.value + '】不存在');
+								}
+							}
+
+							config.value = this.value;
+
+							componentConfig[key] = data;
+
+							rerenderComponent(componentConfig);
+						});
+					} else {
+						var attrComponentConfig = config.config;
+
+						if (typeof attrComponentConfig.callback !== "function") {
+							var attrComponentConfigData = attrComponentConfig.data;
+
+							attrComponentConfig.callback = function (checked) {
+								attrComponentConfigData.forEach(function (data) {
+									if (data.value === checked.value && data.name === checked.name) {
+										data.checked = true;
+									} else {
+										data.checked = false;
+									}
+								});
+
+								componentConfig[key] = checked.value;
+
+								rerenderComponent(componentConfig);
+							}
+						}
+
+						$cfg["to" + capitalize(type)](attrComponentConfig);
+					}
+
+					$row.append($text);
+					$row.append($cfg);
+				});
+			} else {
+				$bottom.addClass('empty').append('<span>该组件暂无配置项</span>');
+			}
+		}
+	});
 });

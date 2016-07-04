@@ -30,7 +30,7 @@ module.exports = {
 	 @param callback:function(checked:object): -> 点击回调
 	 */
 	RADIO: {
-		arrange: "|",
+		arrange: "-",
 		alias: {name: 'name', value: 'value'},
 		data: [],
 		callback: function (checked) {}
@@ -44,7 +44,7 @@ module.exports = {
 	 @param callback:function(checkeds:array): -> 点击回调
 	 */
 	CHECKBOX: {
-		arrange: "|",
+		arrange: "-",
 		alias: {name: 'name', value: 'value'},
 		data: [],
 		allBtn: false,
@@ -70,6 +70,7 @@ module.exports = {
 	 */
 	PANEL: {
 		title: "",
+		icon: "",
 		content: "",
 		btns: []
 	},

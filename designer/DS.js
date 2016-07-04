@@ -1,40 +1,46 @@
 /*
  * DS = data store
- * 生成组件时用的默认参数
+ * 生成组件时用的默认数据源
  */
 var DS = {
-	radio: [{
-		value: "apple",
-		name: "苹果"
-	},{
-		value: "banana",
-		name: "香蕉"
-	},{
-		value: "pear",
-		name: "梨子"
-	}],
+	radio: { 
+		data: [{
+			value: "apple",
+			name: "苹果"
+		},{
+			value: "banana",
+			name: "香蕉"
+		},{
+			value: "pear",
+			name: "梨子"
+		}]
+	},
 
-	checkbox: [{
-		value: "footbal",
-		name: "足球"
-	},{
-		value: "basketball",
-		name: "篮球"
-	},{
-		value: "volleyball",
-		name: "排球"
-	}],
+	checkbox: {
+		data: [{
+			value: "footbal",
+			name: "足球"
+		},{
+			value: "basketball",
+			name: "篮球"
+		},{
+			value: "volleyball",
+			name: "排球"
+		}]
+	},
 
-	select: [{
-		value: "footbal",
-		name: "足球"
-	},{
-		value: "basketball",
-		name: "篮球"
-	},{
-		value: "volleyball",
-		name: "排球"
-	}],
+	select: {
+		data: [{
+			value: "footbal",
+			name: "足球"
+		},{
+			value: "basketball",
+			name: "篮球"
+		},{
+			value: "volleyball",
+			name: "排球"
+		}]
+	},
 
 	table: {
 		cols: [{
@@ -60,21 +66,25 @@ var DS = {
 		}]
 	},
 
-	tab: [{
-		text: '一年级',
-		content: '这是一年级'
-	},{
-		text: '二年级',
-		content: '这是二年级'
-	}],
+	tab: {
+		tabs: [{
+			text: '一年级',
+			content: '这是一年级'
+		},{
+			text: '二年级',
+			content: '这是二年级'
+		}]
+	},
 
-	list: [{
-		content: 'Can you play the guitar?'
-	},{
-		content: 'What time do you go to school?'
-	},{
-		content: 'How do you go to school?'
-	}],
+	list: {
+		data: [{
+			content: 'Can you play the guitar?'
+		},{
+			content: 'What time do you go to school?'
+		},{
+			content: 'How do you go to school?'
+		}]
+	},
 
-	gallery: [1,2,3,4,5,6,7,8,9,10]
+	gallery: {data: [1,2,3,4,5,6,7,8,9,10]}
 };

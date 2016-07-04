@@ -6,8 +6,8 @@ require('./jquery.mousewheel');
 import CONFIG from './config';
 
 const str = ('abcdefghijklmnopqrstuvwxyz' + 
-			'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 
-			'1234567890').split('');
+			 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 
+			 '1234567890').split('');
 
 var createUUID = function (digit) {
 	var _digit = digit || 4;
