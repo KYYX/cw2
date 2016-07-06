@@ -6,27 +6,24 @@
 var current2; //当前配置组件 {id:, role:}
 
 $(function () {
-	var current;  //当前创建的组件 {id:, role: }
-	var createdConfig = {}; //已创建的组件的属性配置
-	var createdComponentConfig = {}; //已创建的组件属性
-
+	var $pageWidth = $("#page-width");
 	var $toListLayout;
 	var $toListComponent;
 	var $createdComponentList = $(".created-component-list");
-	var $main = $("#main");
-	var $mainRoot = $("#main-root");
+	var $main 		= $("#main");
+	var $mainCanvas = $("#main-canvas");
+	var $mainRoot   = $("#main-root");
 	var $bottom = $("#bottom");
 	var $listOfCreated = $(".list-of-created");
 	var $highlight = $(".cover-highlight");
 
-	var capitalize = function (str) {
-		var cap = str[0].toUpperCase();
-
-		return cap + str.substring(1);
-	};
+	var current;  //当前创建的组件 {id:, role: }
+	var createdConfig = {}; //已创建的组件的属性配置
+	var createdComponentConfig = {}; //已创建的组件属性
+	var defaultPgeWidth = $mainRoot.width();
 
 	var createComponent = function ($this) {
-		var id = $.cw.uuid();
+		var id = cw.createUUID();
 		var role = current.role;
 
 		if (role === "col") {
@@ -35,11 +32,19 @@ $(function () {
 			$this.append('<div class="cw-row" id="' + id + '"></div>');
 
 			addCreatedComponentList(id, role);
+		} else if (role === "text") {
+			var $span = $('<span class="cw-text" id="' + id + '" contenteditable="true">静态文本</span>').click(function (event) {
+				event.stopPropagation();
+			});
+
+			$this.append($span);
+
+			addCreatedComponentList(id, role);
 		} else {
 			try {
 				var componentConfig = $.extend(true, {id: id}, CONFIG_COMPONENT[role.toUpperCase()], DS[role]);
 
-				$this["to" + capitalize(role)](componentConfig);
+				$this["to" + cw.capitalize(role)](componentConfig);
 
 				$("#" + id).wrap('<div class="component-wrap"></div>');
 
@@ -49,105 +54,21 @@ $(function () {
 			} catch (e) {
 				return console.warn('unknown component <' + role + '>, please feedback to <337487652@qq.com>');
 			}
-
-			/*
-			if (role === "radio") {
-				$this.toRadio({
-					id: id,
-					arrange: "-",
-					data: DS.radio,
-					callback: function (checked) {
-						console.log(checked);
-					}
-				});
-			} else if (role === "checkbox") {
-				$this.toCheckbox({
-					id: id,
-					data: DS.checkbox,
-					allBtn: true,
-					callback: function (checkeds) {
-						console.log(checkeds);
-					}
-				});
-			} else if (role === "select") {
-				$this.toSelect({
-					id: id,
-					data: DS.select,
-					callback: function (checkeds) {
-						console.log(checkeds);
-					}
-				});
-			} else if (role === "table") {
-				$this.toTable({
-					id: id,
-					mode: 2,
-					cols: DS.table.cols,
-					rows: DS.table.rows
-				});
-			} else if (role === "page") {
-				$this.toPage({
-					id: id,
-					max: 10
-				});
-			} else if (role === "panel") {
-				$this.toPanel({
-					id: id,
-					icon: 	 "./images/icon_check.png",
-					title: 	 "这是一个带icon的Panel组件",
-					content: "我是panel的content部分",
-					btns: [{
-						name: "确定",
-						callback: function () {
-							alert("确定");
-						}
-					}, {
-						name: "取消"
-					}]
-				});
-			} else if (role === "tab") {
-				$this.toTab({
-					id: id,
-					tabs: DS.tab,
-					active: 2,
-					callback: function ($content, index) {
-						index === 2 && $content.html("hahaha");
-					}
-				});
-			} else if (role === "list") {
-				$this.toList({
-					id: id,
-					clickable: true,
-					data: DS.list,
-					callback: function ($li, data) {
-						console.log(data);
-					}
-				});
-			} else if (role === "gallery") {
-				$this.toGallery({
-					id: id,
-					data: DS.gallery
-				});
-			} else {
-				return console.warn('unknown component <' + role + '>, please feedback to <337487652@qq.com>');
-			}
-
-			$("#" + id).wrap('<div class="component-wrap"></div>');
-			
-			addCreatedComponentList(id, role);
-			*/
 		}
 	};
 
 	//编辑组件属性后，重绘组件
 	var rerenderComponent = function (componentConfig) {
+		var $parent = $("#" + current2.id).parent();
+
 		$("#" + current2.id).remove();
 
-		$parent["to" + capitalize(current2.role)](componentConfig);
+		$parent["to" + cw.capitalize(current2.role)](componentConfig);
 	};
 
 	var addCreatedComponentList = function (id, role) {
 		$createdComponentList.append('<li id="created-' + id + '" data-role="' + role + '">' +
-									 '	<span>' + capitalize(role) + ' ( #' + id + ' )</span>' +
+									 '	<span>' + cw.capitalize(role) + ' ( #' + id + ' )</span>' +
 									 '	<i title="Delete">x</i>' +
 									 '	<div></div>' +
 									 '</li>');
@@ -163,6 +84,7 @@ $(function () {
 		$("#created-" + id).remove();
 	};
 
+	//切换显示模式
 	$(".toSelect-mode").toSelect({
 		data: [{
 			value: "dev",
@@ -171,8 +93,8 @@ $(function () {
 			value: "preview",
 			name: "预览"
 		}],
-		callback: function (checkeds) {
-			console.log(checkeds);
+		callback: function (checked) {
+			$mainRoot.toggleClass('dev', (checked.value === "dev"));
 		}
 	});
 
@@ -209,11 +131,7 @@ $(function () {
 			text: '布局'
 		},{
 			text: '组件'
-		}],
-		// active: 2,
-		// callback: function ($content, index) {
-		// 	index === 2 && $content.html("hahaha");
-		// }
+		}]
 	});
 
 	//布局组件
@@ -287,6 +205,9 @@ $(function () {
 	$("#tab-of-component-content-2").toList({
 		clickable: true,
 		data: [{
+			content: '静态文本 ( Text )',
+			role: 'text'
+		},{
 			content: '单选框 ( Radio )',
 			role: 'radio'
 		},{
@@ -318,6 +239,35 @@ $(function () {
 			$toListLayout.children(".cw-list-active").removeClass('cw-list-active');
 			current = data;
 			console.log(data);
+		}
+	});
+
+
+
+
+
+	//页面宽调整
+	$pageWidth.val(defaultPgeWidth).blur(function () {
+		var pageWidth = Number($(this).val());
+
+		if (pageWidth) {
+			if (pageWidth > defaultPgeWidth) {
+				$mainRoot.css({
+					width: pageWidth,
+					zoom: defaultPgeWidth / pageWidth
+				});
+			} else {
+				$mainRoot.css({
+					width: pageWidth,
+					zoom: 1
+				});
+			}
+		} else {
+			$pageWidth.val($mainCanvas.width())
+		}
+	}).keypress(function (event) {
+		if (event.keyCode === 13) {
+			$(this).blur();
 		}
 	});
 
@@ -370,32 +320,52 @@ $(function () {
 
 		$.cw.confirm(confirmText, function (flag) {
 			if (flag) {
-				var $parent = $("#" + id).parent('.component-wrap');
+				var $cpt  = $("#" + id);
+				var $wrap = $cpt.parent('.component-wrap');
+
+				//循环删除自己下面创建的组件
+				$cpt.find('[id]').each(function () {
+					var id  = $(this).attr("id");
+					var $li = $("#created-" + id);
+
+					if ($li.length > 0) {
+
+						if ($li.hasClass("active")) {
+							$li.click();
+						}
+
+						removeCreatedComponentList(id);
+					} else { /* 不是创建的组件 */ }
+				});
 				
-				if ($parent.length > 0) {
-					$parent.remove();
-				} else {
-					$("#" + id).remove();
+				if ($wrap.length > 0) {
+					//普通组件删除wrap层
+					$wrap.remove();
+				} else { 
+					//布局组件直接删除
+					$cpt.remove();
 				}
 
 				removeCreatedComponentList(id);
-			} else { }
+			} else { /* 取消删除操作 */ }
 		});
+
+		return false;
 	});
 
 	//点击主面板创建Row
 	$main.click(function () {
 		if (current) {
 			if (current.role === "row") {
-				var id = $.cw.uuid();
+				var id = cw.createUUID();
 
 				$mainRoot.append('<div class="cw-row" id="' + id + '"></div>');
 
 				addCreatedComponentList(id, current.role);
 			} else {
-				$.cw.alert("主面板只能添加&lt;Row&gt;组件");
+				$.cw.toast("主面板只能添加 &lt;Row&gt; 组件", 1000, $mainCanvas);
 			}
-		} else { }
+		} else { /* 当前没有选中组件则没有操作 */ }
 	});
 
 	//Row里面只能创建Col
@@ -404,15 +374,15 @@ $(function () {
 
 		if (current) {
 			if (current.role === "col") {
-				var id = $.cw.uuid();
+				var id = cw.createUUID();
 
 				$this.append('<div class="cw-col ' + current.width + '" id="' + id + '"></div>');
 
 				addCreatedComponentList(id, current.role);
 			} else {
-				$.cw.alert("&lt;Row&gt;里面只能添加&lt;Col&gt;");
+				$.cw.toast("&lt;Row&gt; 里面只能添加 &lt;Col&gt;", 1000, $mainCanvas);
 			}
-		} else { }
+		} else { /* 当前没有选中组件则没有操作 */ }
 
 		return false;
 	});
@@ -471,15 +441,13 @@ $(function () {
 						$bottom.append($row);
 					}
 
-					var $parent = $("#" + current2.id).parent();
-
-					var $text = $('<div class="cw-col w2 cw-text-right">' + config.text + '：</div>');
-					var $cfg  = $('<div class="cw-col w2"></div>');
+					var $text = $('<div class="cw-col w1 cw-text-right">' + config.text + '</div>');
+					var $cfg  = $('<div class="cw-col w3"></div>');
 
 					if (type === "text") {
 						var fromSource = !!config.source;
 
-						var $input = $('<input type="text" value="' + config.value + '" />');
+						var $input = $('<input type="text" value="' + (config.value || "") + '" />');
 
 						$cfg.append($input);
 
@@ -499,6 +467,14 @@ $(function () {
 							componentConfig[key] = data;
 
 							rerenderComponent(componentConfig);
+						});
+					} else if (type === "content") {
+						var $input = $('<input type="text" value="' + (config.value || "") + '" />');
+
+						$cfg.append($input);
+
+						$input.change(function () {
+							$("#" + current2.id).html($(this).val());
 						});
 					} else {
 						var attrComponentConfig = config.config;
@@ -521,7 +497,7 @@ $(function () {
 							}
 						}
 
-						$cfg["to" + capitalize(type)](attrComponentConfig);
+						$cfg["to" + cw.capitalize(type)](attrComponentConfig);
 					}
 
 					$row.append($text);

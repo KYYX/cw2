@@ -36,11 +36,11 @@
 ***
 
 ### 五、jQuery 插件组件 ###
-- 单选组件 ( radio )
-- 复选组件 ( checkbox )
-- 下拉选择组件 ( select )
-- 分页组件 ( page )
-- 滚动条组件 ( scroll )
+- 单选框 ( radio )
+- 复选框 ( checkbox )
+- 下拉框 ( select )
+- 分页栏 ( page ) - 独占整列组件
+- 滚动条 ( scroll )
 - 面板 ( panel )
 - 表格 ( table )
 - 标签 ( tab )
@@ -52,6 +52,7 @@
 ### 六、jQuery 方法组件 ###
 - 警告框 ( alert )
 - 确认框 ( confirm )
+- 提示框 ( toast )
 
 ***
 

@@ -2,23 +2,10 @@
 require('./cw2.less');
 //鼠标滚轮事件插件
 require('./jquery.mousewheel');
+require('./cw2_util');
+
 //组件默认配置
 import CONFIG from './config';
-
-const str = ('abcdefghijklmnopqrstuvwxyz' + 
-			 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 
-			 '1234567890').split('');
-
-var createUUID = function (digit) {
-	var _digit = digit || 4;
-	var uuid = "";
-
-	for (var i=0; i<_digit; i++) {
-		uuid += str[~~(Math.random() * 62)];
-	}
-
-	return uuid;
-};
 
 (function ($) {
 	'use strict';
@@ -67,7 +54,7 @@ var createUUID = function (digit) {
 			var id;
 
 			do {
-				id = createUUID();
+				id = cw.createUUID();
 				hasId = $("#" + id).length > 0 ? true : false;
 			} while (hasId);
 
@@ -132,9 +119,9 @@ var createUUID = function (digit) {
 		}
 
 		return function ($this, cfg) {
-			var id 	  = cfg.id || createUUID();
+			var id 	  = cfg.id || cw.createUUID();
 			var cur   = cfg.cur;
-			var $page = $("<ul class='cw page' id='" + id + "'></ul>");
+			var $page = $("<ul class='cw-page' id='" + id + "'></ul>");
 			var args  = [$page, cur, cfg.max, cfg.callback, cfg.auto];
 
 			$page.on("click", "li.page", function () {
@@ -162,7 +149,7 @@ var createUUID = function (digit) {
 
 			args[4] = true;
 
-			$this.append($page);
+			$this.empty().css('fontSize', 0).append($page);
 		}
 	})();
 
@@ -267,9 +254,9 @@ var createUUID = function (digit) {
 		};
 
 		return function ($this, cfg, replace) {
-			var id = cfg.id || createUUID();
+			var id = cfg.id || cw.createUUID();
 
-			var $radio = $("<div class='cw radio' id='" + id + "'></div>");
+			var $radio = $("<div class='cw-radio' id='" + id + "'></div>");
 
 			var checkedIndex = -1;
 
@@ -324,10 +311,10 @@ var createUUID = function (digit) {
 		};
 
 		return function ($this, cfg) {
-			var id 	   = cfg.id || createUUID();
+			var id 	   = cfg.id || cw.createUUID();
 			var allBtn = cfg.allBtn;
 
-			var $checkbox = $("<div class='cw checkbox' id='" + id + "'></div>");
+			var $checkbox = $("<div class='cw-checkbox' id='" + id + "'></div>");
 
 			var checkedIndexes = [];
 
@@ -410,13 +397,13 @@ var createUUID = function (digit) {
 	})();
 
 	CW._toSelect = (function () {
-		var selectTpl = '<div class="cw select">' +
+		var selectTpl = '<div class="cw-select">' +
 						'	<div><p></p><i></i></div>' +
 				        '	<ul></ul>' +
 				        '</div>';
 
 		return function ($this, cfg) {
-			var id = cfg.id || createUUID();
+			var id = cfg.id || cw.createUUID();
 
 			var $select = $(selectTpl).attr('id', id);
 			var $div 	= $select.children('div');
@@ -424,7 +411,7 @@ var createUUID = function (digit) {
 			var $ul  	= $select.children('ul');
 
 			var checkedIndex = 0;
-			var height = cfg.data.length * 30 + 1;
+			var height = cfg.data.length * 24 + 1;
 			var expand = false;
 
 			var show = function () {
@@ -484,7 +471,7 @@ var createUUID = function (digit) {
 				  '</div>';
 
 		return function ($this, cfg) {
-			var id 	    = cfg.id || createUUID();
+			var id 	    = cfg.id || cw.createUUID();
 			var title   = cfg.title;
 			var content = cfg.content;
 			var btns    = cfg.btns;
@@ -537,7 +524,7 @@ var createUUID = function (digit) {
 		var checkboxCheckedClassName = 'cw-table-checkbox-checked';
 
 		return function ($this, cfg) {
-			var id 	  = cfg.id || createUUID();
+			var id 	  = cfg.id || cw.createUUID();
 			var mode  = cfg.mode;
 			var align = cfg.align;
 			var cols  = cfg.cols;
@@ -639,7 +626,7 @@ var createUUID = function (digit) {
 				  '</div>';
 
 		return function ($this, cfg) {
-			var id = cfg.id || createUUID();
+			var id = cfg.id || cw.createUUID();
 
 			var $tab  = $(tpl).attr("id", id);
 			var $tabs = $tab.children('.cw-tab-tabs');
@@ -675,7 +662,7 @@ var createUUID = function (digit) {
 		var activeCN = 'cw-list-active';
 
 		return function ($this, cfg) {
-			var id = cfg.id || createUUID();
+			var id = cfg.id || cw.createUUID();
 
 			var $list = $('<ul class="cw-list" id="' + id + '"></ul>');
 
@@ -721,7 +708,7 @@ var createUUID = function (digit) {
 		var arrowDisabledCN = 'cw-gallery-arrow-disabled';
 
 		return function ($this, cfg) {
-			var id = cfg.id || createUUID();
+			var id = cfg.id || cw.createUUID();
 
 			var $gallery = $(tpl).attr('id', id);
 			var $content = $gallery.find('.cw-gallery-content').height(cfg.height);
@@ -865,12 +852,43 @@ var createUUID = function (digit) {
 		};
 	})();
 
+	var toToast = (function () {
+		var shown = false; //屏幕上是否已经有toast;
+		var timeout;
+
+		var $toast;
+
+		return function (content, time, $target) {
+			var _time = Number(time) && time > 0 ? time : 1000;
+
+			if (shown) {
+				clearTimeout(timeout);
+				$toast.html(content);
+			} else {
+				$toast = $('<div class="cw-toast">' + content + '</div>');
+			}
+
+			if ($target instanceof jQuery) {
+				$target.append($toast);
+			} else {
+				$BODY.append($toast);
+			}
+
+			shown = true;
+
+			timeout = setTimeout(function () {
+				shown = false;
+				$toast.remove();
+			}, time);
+		}
+	})();
+
 	//扩展jQuery
 	$.extend({
 		cw: {
 			alert: toAlert,
 			confirm: toConfirm,
-			uuid: createUUID
+			toast: toToast
 		}
 	});
 })(jQuery);

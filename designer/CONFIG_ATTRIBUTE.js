@@ -12,6 +12,30 @@ var CONFIG = {
 				$("#" + current2.id).toggleClass('nopadding', checked.value);
 			}
 		}
+	},{
+		key:  "align",
+		text: "水平对齐",
+		type: "radio",
+		config: {
+			data: [{
+				name: "左", value: "left", checked: true
+			},{
+				name: "中", value: "center"
+			},{
+				name: "右", value: "right"
+			}],
+			callback: function (checked) {
+				$("#" + current2.id).removeClass('cw-text-center cw-text-left cw-text-right')
+									.addClass('cw-text-' + checked.value);
+			}
+		}
+	}],
+
+	text: [{
+		key:   "text",
+		text:  "文本内容",
+		value: "静态文本",
+		type:  "content"
 	}],
 
 	radio: [{
@@ -84,7 +108,8 @@ var CONFIG = {
 	page: [{
 		key: "max",
 		text: "最大页码",
-		type: "text"
+		type: "text",
+		value: 1
 	}],
 
 	panel: [{
