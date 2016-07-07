@@ -37,5 +37,6 @@ jspm_packages
 .node_repl_history
 
 # Build files
+build
 cw2.js
 cw2.js.map
