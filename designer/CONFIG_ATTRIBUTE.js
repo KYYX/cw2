@@ -13,6 +13,44 @@ var CONFIG = {
 			}
 		}
 	},{
+		key:  "width",
+		text: "宽度",
+		type: "select",
+		config: {
+			data: [{
+				name: "自适应", value: "0", checked: true
+			},{
+				name: "1 / 12", value: "1"
+			},{
+				name: "2 / 12", value: "2"
+			},{
+				name: "3 / 12", value: "3"
+			},{
+				name: "4 / 12", value: "4"
+			},{
+				name: "5 / 12", value: "5"
+			},{
+				name: "6 / 12", value: "6"
+			},{
+				name: "7 / 12", value: "7"
+			},{
+				name: "8 / 12", value: "8"
+			},{
+				name: "9 / 12", value: "9"
+			},{
+				name: "10 / 12", value: "10"
+			},{
+				name: "11 / 12", value: "11"
+			},{
+				name: "独占", value: "12"
+			}],
+			callback: function (checked) {
+				var currentEditNode = $("#" + current2.id)[0];
+
+				currentEditNode.className = currentEditNode.className.replace(/\s?w\d{1,2}/g, "") + " w" + checked.value;
+			}
+		}
+	},{
 		key:  "align",
 		text: "水平对齐",
 		type: "radio",

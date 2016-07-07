@@ -54,12 +54,14 @@ module.exports = {
 	 @name 下拉组件默认配置
 	 @param alias:object:{name,value} -> 别名对应
 	 @param data:array:[]
+	 @param expandTo:string:bottom -> 展开方向
 	 @param callback:function(checked): -> 点击回调
 	 */
 	SELECT: {
 		placeholder: "",
 		alias: {name: 'name', value: 'value'},
 		data: [],
+		expandTo: "bottom",
 		callback: function (checked) {}
 	},
 	/*

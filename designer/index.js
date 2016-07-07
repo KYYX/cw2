@@ -6,16 +6,14 @@
 var current2; //当前配置组件 {id:, role:}
 
 $(function () {
-	var $pageWidth = $("#page-width");
-	var $toListLayout;
-	var $toListComponent;
-	var $createdComponentList = $(".created-component-list");
-	var $main 		= $("#main");
-	var $mainCanvas = $("#main-canvas");
-	var $mainRoot   = $("#main-root");
-	var $bottom = $("#bottom");
+	var $pageWidth 		 = $("#page-width");
+	var $main 				 = $("#main");
+	var $mainCanvas 	 = $("#main-canvas");
+	var $mainRoot   	 = $("#main-root");
+	var $bottom 	  	 = $("#bottom");
 	var $listOfCreated = $(".list-of-created");
-	var $highlight = $(".cover-highlight");
+	var $highlight 		 = $(".cover-highlight");
+	var $createdComponentList = $(".created-component-list");
 
 	var current;  //当前创建的组件 {id:, role: }
 	var createdConfig = {}; //已创建的组件的属性配置
@@ -49,7 +47,7 @@ $(function () {
 				$("#" + id).wrap('<div class="component-wrap"></div>');
 
 				createdComponentConfig[id] = componentConfig;
-			
+
 				addCreatedComponentList(id, role);
 			} catch (e) {
 				return console.warn('unknown component <' + role + '>, please feedback to <337487652@qq.com>');
@@ -125,15 +123,16 @@ $(function () {
 	})
 
 	//左侧组件栏
-	$(".toTab-component").toTab({
-		id: "tab-of-component",
-		tabs: [{
-			text: '布局'
-		},{
-			text: '组件'
-		}]
-	});
+	// $(".toTab-component").toTab({
+	// 	id: "tab-of-component",
+	// 	tabs: [{
+	// 		text: '布局'
+	// 	},{
+	// 		text: '组件'
+	// 	}]
+	// });
 
+	/*
 	//布局组件
 	$("#tab-of-component-content-1").toList({
 		clickable: true,
@@ -200,11 +199,21 @@ $(function () {
 			console.log(data);
 		}
 	});
+	*/
 
 	//普通组件
-	$("#tab-of-component-content-2").toList({
+	// $("#tab-of-component-content-2").toList({
+	$(".list-of-create").toList({
 		clickable: true,
 		data: [{
+			content: '行 ( Row )',
+			width: 'w',
+			role: 'row'
+		},{
+			content: '列 ( Col )',
+			width: 'auto',
+			role: 'col'
+		},{
 			content: '静态文本 ( Text )',
 			role: 'text'
 		},{
@@ -236,7 +245,6 @@ $(function () {
 			role: 'gallery'
 		}],
 		callback: function ($li, data) {
-			$toListLayout.children(".cw-list-active").removeClass('cw-list-active');
 			current = data;
 			console.log(data);
 		}
@@ -247,28 +255,21 @@ $(function () {
 
 
 	//页面宽调整
-	$pageWidth.val(defaultPgeWidth).blur(function () {
+	$pageWidth.val(defaultPgeWidth);
+	$pageWidth.blur(function () {
 		var pageWidth = Number($(this).val());
 
 		if (pageWidth) {
-			if (pageWidth > defaultPgeWidth) {
-				$mainRoot.css({
-					width: pageWidth,
-					zoom: defaultPgeWidth / pageWidth
-				});
-			} else {
-				$mainRoot.css({
-					width: pageWidth,
-					zoom: 1
-				});
-			}
+			$mainRoot.css({
+				width: pageWidth,
+				zoom:  pageWidth > defaultPgeWidth ? defaultPgeWidth / pageWidth : 1
+			});
 		} else {
 			$pageWidth.val($mainCanvas.width())
 		}
-	}).keypress(function (event) {
-		if (event.keyCode === 13) {
-			$(this).blur();
-		}
+	});
+	$pageWidth.keypress(function (event) {
+		event.keyCode === 13 &&	$(this).blur();
 	});
 
 	//高亮已创建的组件
@@ -337,11 +338,11 @@ $(function () {
 						removeCreatedComponentList(id);
 					} else { /* 不是创建的组件 */ }
 				});
-				
+
 				if ($wrap.length > 0) {
 					//普通组件删除wrap层
 					$wrap.remove();
-				} else { 
+				} else {
 					//布局组件直接删除
 					$cpt.remove();
 				}
@@ -398,10 +399,6 @@ $(function () {
 		return false;
 	});
 
-	//参数赋值
-	$toListLayout 	 = $("#tab-of-component-content-1 > .cw-list");
-	$toListComponent = $("#tab-of-component-content-2 > .cw-list");
-
 	//点击右侧<li/>
 	$createdComponentList.on('click', 'li', function () {
 		current2 = null;
@@ -456,7 +453,7 @@ $(function () {
 
 							if (fromSource) {
 								data = DS_CUSTOM[data];
-								
+
 								if (!data) {
 									return $.cw.alert('数据源【' + this.value + '】不存在');
 								}
@@ -478,6 +475,10 @@ $(function () {
 						});
 					} else {
 						var attrComponentConfig = config.config;
+
+						if (type === "select") {
+							attrComponentConfig.expandTo = "top";
+						}
 
 						if (typeof attrComponentConfig.callback !== "function") {
 							var attrComponentConfigData = attrComponentConfig.data;

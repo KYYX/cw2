@@ -17,7 +17,7 @@
 1. 安装最新版的 [nodejs](https://nodejs.org/en/download/)
 2. 安装 webpack
 
-    > npm install -g webpack 
+    > npm install -g webpack
 
 3. 执行下面的命令编译套件，会生成一个build文件夹
 
@@ -39,7 +39,7 @@
 - 单选框 ( radio )
 - 复选框 ( checkbox )
 - 下拉框 ( select )
-- 分页栏 ( page ) - 独占整列组件
+- 分页栏 ( page )
 - 滚动条 ( scroll )
 - 面板 ( panel )
 - 表格 ( table )

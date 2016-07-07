@@ -1,5 +1,5 @@
 //默认组件样式
-require('./cw2.less');
+require('./styles/cw2.less');
 //鼠标滚轮事件插件
 require('./jquery.mousewheel');
 require('./cw2_util');
@@ -37,7 +37,7 @@ import CONFIG from './config';
 	}
 
 	var CW = {};
-	var COMPONENTS = ['Page',   'Scroll', 'Radio', 'Checkbox', 
+	var COMPONENTS = ['Page',   'Scroll', 'Radio', 'Checkbox',
 	 				  'Select', 'Panel',  'Table', 'Tab', 'List',
 	 				  'Gallery'];
 	var $ROOT, $BODY, WH, WW;
@@ -121,8 +121,11 @@ import CONFIG from './config';
 		return function ($this, cfg) {
 			var id 	  = cfg.id || cw.createUUID();
 			var cur   = cfg.cur;
-			var $page = $("<ul class='cw-page' id='" + id + "'></ul>");
+			var $wrap = $("<div class='cw-page' id='" + id + "'></div>");
+			var $page = $("<ul></ul>");
 			var args  = [$page, cur, cfg.max, cfg.callback, cfg.auto];
+
+			$wrap.append($page);
 
 			$page.on("click", "li.page", function () {
 				args[1] = Number(this.dataset.page);
@@ -130,7 +133,7 @@ import CONFIG from './config';
 			});
 
 			$page.on("click", "li.prev", function () {
-				if ($(this).hasClass("disabled")) 
+				if ($(this).hasClass("disabled"))
 					return;
 
 				args[1] -= 1;
@@ -138,7 +141,7 @@ import CONFIG from './config';
 			});
 
 			$page.on("click", "li.next", function () {
-				if ($(this).hasClass("disabled")) 
+				if ($(this).hasClass("disabled"))
 					return;
 
 				args[1] += 1;
@@ -149,7 +152,7 @@ import CONFIG from './config';
 
 			args[4] = true;
 
-			$this.empty().css('fontSize', 0).append($page);
+			$this.append($wrap);
 		}
 	})();
 
@@ -457,6 +460,12 @@ import CONFIG from './config';
 
 			$p.html(cfg.data[checkedIndex].name);
 
+			if (cfg.expandTo === "top") {
+				$ul.css("bottom", 24);
+			} else {
+				$ul.css("top", 25);
+			}
+
 			$this.append($select);
 		}
 	})();
@@ -549,7 +558,7 @@ import CONFIG from './config';
 						var $this = $(this);
 
 						$this.toggleClass(checkboxCheckedClassName);
-						
+
 						$tbody.find("." + checkboxClassName).toggleClass(
 							checkboxCheckedClassName, $this.hasClass(checkboxCheckedClassName)
 						);
@@ -581,7 +590,7 @@ import CONFIG from './config';
 						$tbody.find("." + radioCheckedClassName).removeClass(radioCheckedClassName);
 						$(this).addClass(radioCheckedClassName);
 					});
-				
+
 
 					$td.children('.' + checkboxClassName).click(function () {
 						$(this).toggleClass(checkboxCheckedClassName);
@@ -591,7 +600,7 @@ import CONFIG from './config';
 							checkboxCheckedClassName, (checkedAmount === rows.length)
 						);
 					});
-					
+
 					$tr.append($td);
 				}
 
@@ -621,8 +630,8 @@ import CONFIG from './config';
 
 	CW._toTab = (function () {
 		var tpl = '<div class="cw-tab">' +
-				  '	<ul class="cw-tab-tabs"></ul>' + 
-				  '	<div class="cw-tab-contents"></div>' + 
+				  '	<ul class="cw-tab-tabs"></ul>' +
+				  '	<div class="cw-tab-contents"></div>' +
 				  '</div>';
 
 		return function ($this, cfg) {
@@ -787,7 +796,7 @@ import CONFIG from './config';
 					   '	<div>' +
 					   '		<div>这只是一个警告框</div>' +
 					   '		<button>知道了</button>' +
-					   '	</div>' + 
+					   '	</div>' +
 					   '</div>');
 		var $div	 = $alert.children("div");
 		var $content = $div.children("div");
@@ -822,7 +831,7 @@ import CONFIG from './config';
 					   '		<div>这只是一个确认框</div>' +
 					   '		<button class="ok">好的</button>' +
 					   '		<button class="cancel">取消</button>' +
-					   '	</div>' + 
+					   '	</div>' +
 					   '</div>');
 		var $div	 = $confirm.children("div");
 		var $content = $div.children("div");

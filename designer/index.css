@@ -106,7 +106,19 @@ body {
 
 #left-of-center {
 	width: 190px;
-	padding-top: 4px;
+}
+
+#left-of-center .list-of-create li.cw-list-active {
+	position: relative;
+}
+#left-of-center .list-of-create li.cw-list-active:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 8px;
+	height: 100%;
+	background-color: #21bd73;
 }
 
 #right-of-center {
@@ -139,11 +151,11 @@ body {
 	width:  16px;
 	height: 20px;
 	margin: 6px 0;
-    color: red;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: bold;
-    text-align: center;
+  color: red;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
 	line-height: 20px;
 	cursor: pointer;
 }
@@ -197,6 +209,7 @@ body {
 #main-root {
 	min-height: 100%;
 	padding: 16px 32px 1px 32px;
+	margin: 0 auto;
 	background-color: #fffeee;
 }
 
@@ -225,7 +238,7 @@ body {
 
 #main-root .cw-col {
 	padding-left:  16px;
-	padding-right: 16px; 
+	padding-right: 16px;
 	background-color: #fff;
 }
 #main-root .cw-col:empty {
@@ -255,6 +268,7 @@ body {
 	/*margin-left:  -8px;
     margin-right: -8px;*/
 	margin-bottom: 16px;
+	line-height: 26px;
 }
 
 #bottom .cw-col {
