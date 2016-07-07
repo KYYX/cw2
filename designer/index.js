@@ -20,6 +20,7 @@ $(function () {
 	var createdComponentConfig = {}; //已创建的组件属性
 	var defaultPgeWidth = $mainRoot.width();
 
+	//创建组件
 	var createComponent = function ($this) {
 		var id = cw.createUUID();
 		var role = current.role;
@@ -57,27 +58,32 @@ $(function () {
 
 	//编辑组件属性后，重绘组件
 	var rerenderComponent = function (componentConfig) {
-		var $parent = $("#" + current2.id).parent();
+		var $this = $("#" + current2.id);
+		var $parent = $this.parent();
 
-		$("#" + current2.id).remove();
+		$this.remove();
 
 		$parent["to" + cw.capitalize(current2.role)](componentConfig);
 	};
 
+	//向【已创建的组件】列表里添加组件
 	var addCreatedComponentList = function (id, role) {
-		$createdComponentList.append('<li id="created-' + id + '" data-role="' + role + '">' +
-									 '	<span>' + cw.capitalize(role) + ' ( #' + id + ' )</span>' +
-									 '	<i title="Delete">x</i>' +
-									 '	<div></div>' +
-									 '</li>');
-
-		$listOfCreated.toScroll({
-			gap: 33
-		});
-
 		createdConfig[id] = $.extend(true, [], CONFIG[role]);
+
+		var $li = $('<li id="created-' + id + '" data-role="' + role + '">' +
+							  '	<span>' + cw.capitalize(role) + ' ( #' + id + ' )</span>' +
+							  '	<i title="Delete">x</i>' +
+							  '	<div></div>' +
+							  '</li>');
+
+		$createdComponentList.append($li);
+
+		$listOfCreated.toScroll({gap: 33});
+
+		$li.click();
 	};
 
+	//从【已创建的组件】列表里删除组件
 	var removeCreatedComponentList = function (id) {
 		$("#created-" + id).remove();
 	};
@@ -122,91 +128,12 @@ $(function () {
 		}
 	})
 
-	//左侧组件栏
-	// $(".toTab-component").toTab({
-	// 	id: "tab-of-component",
-	// 	tabs: [{
-	// 		text: '布局'
-	// 	},{
-	// 		text: '组件'
-	// 	}]
-	// });
-
-	/*
-	//布局组件
-	$("#tab-of-component-content-1").toList({
-		clickable: true,
-		data: [{
-			content: '行 ( Row )',
-			width: 'w',
-			role: 'row'
-		},{
-			content: '列 ( 自适应宽 )',
-			width: 'auto',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;1/12 宽 )',
-			width: 'w1',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;2/12 宽 )',
-			width: 'w2',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;3/12 宽 )',
-			width: 'w3',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;4/12 宽 )',
-			width: 'w4',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;5/12 宽 )',
-			width: 'w5',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;6/12 宽 )',
-			width: 'w6',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;7/12 宽 )',
-			width: 'w7',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;8/12 宽 )',
-			width: 'w8',
-			role: 'col'
-		},{
-			content: '列 ( &nbsp;&nbsp;9/12 宽 )',
-			width: 'w9',
-			role: 'col'
-		},{
-			content: '列 ( 10/12 宽 )',
-			width: 'w10',
-			role: 'col'
-		},{
-			content: '列 ( 11/12 宽 )',
-			width: 'w11',
-			role: 'col'
-		},{
-			content: '列 ( 独占 )',
-			width: 'w12',
-			role: 'col'
-		}],
-		callback: function ($li, data) {
-			$toListComponent.children(".cw-list-active").removeClass('cw-list-active');
-			current = data;
-			console.log(data);
-		}
-	});
-	*/
-
 	//普通组件
-	// $("#tab-of-component-content-2").toList({
 	$(".list-of-create").toList({
 		clickable: true,
 		data: [{
 			content: '行 ( Row )',
+			checked: true,
 			width: 'w',
 			role: 'row'
 		},{
@@ -370,7 +297,7 @@ $(function () {
 	});
 
 	//Row里面只能创建Col
-	$("#main-root").on('click', '.cw-row', function () {
+	$mainRoot.on('click', '.cw-row', function () {
 		var $this = $(this);
 
 		if (current) {
@@ -389,7 +316,7 @@ $(function () {
 	});
 
 	//Col面可以创建除Col以外的所有组件
-	$("#main-root").on('click', '.cw-col', function () {
+	$mainRoot.on('click', '.cw-col', function () {
 		if (current) {
 			var $target = $(this);
 
