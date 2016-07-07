@@ -7,6 +7,7 @@ var current2; //当前配置组件 {id:, role:}
 
 $(function () {
 	var $pageWidth 		 = $("#page-width");
+	var $previewBtn    = $("#preview-btn");
 	var $main 				 = $("#main");
 	var $mainCanvas 	 = $("#main-canvas");
 	var $mainRoot   	 = $("#main-root");
@@ -26,7 +27,7 @@ $(function () {
 		var role = current.role;
 
 		if (role === "col") {
-			$.cw.alert("&lt;Col&gt;里面不能嵌套&lt;Col&gt;");
+			$.cw.toast("&lt;Col&gt;里面不能嵌套&lt;Col&gt;", 1000, $mainCanvas);
 		} else if (role === "row") {
 			$this.append('<div class="cw-row" id="' + id + '"></div>');
 
@@ -43,11 +44,11 @@ $(function () {
 			try {
 				var componentConfig = $.extend(true, {id: id}, CONFIG_COMPONENT[role.toUpperCase()], DS[role]);
 
+				createdComponentConfig[id] = componentConfig;
+
 				$this["to" + cw.capitalize(role)](componentConfig);
 
 				$("#" + id).wrap('<div class="component-wrap"></div>');
-
-				createdComponentConfig[id] = componentConfig;
 
 				addCreatedComponentList(id, role);
 			} catch (e) {
@@ -86,6 +87,25 @@ $(function () {
 	//从【已创建的组件】列表里删除组件
 	var removeCreatedComponentList = function (id) {
 		$("#created-" + id).remove();
+	};
+
+	//缩放画布到指定宽度
+	var scaleMainRoot = function (pageWidth) {
+		pageWidth = Number(pageWidth);
+
+		if (pageWidth) {
+			$mainRoot.css({
+				width: pageWidth,
+				zoom:  pageWidth > defaultPgeWidth ? defaultPgeWidth / pageWidth : 1
+			});
+		} else {
+			pageWidth = defaultPgeWidth;
+			$pageWidth.val(pageWidth);
+			$mainRoot.css({
+				width: pageWidth,
+				zoom:  1
+			});
+		}
 	};
 
 	//切换显示模式
@@ -184,19 +204,22 @@ $(function () {
 	//页面宽调整
 	$pageWidth.val(defaultPgeWidth);
 	$pageWidth.blur(function () {
-		var pageWidth = Number($(this).val());
-
-		if (pageWidth) {
-			$mainRoot.css({
-				width: pageWidth,
-				zoom:  pageWidth > defaultPgeWidth ? defaultPgeWidth / pageWidth : 1
-			});
-		} else {
-			$pageWidth.val($mainCanvas.width())
-		}
+		scaleMainRoot($pageWidth.val());
 	});
 	$pageWidth.keypress(function (event) {
 		event.keyCode === 13 &&	$(this).blur();
+	});
+
+	$previewBtn.click(function () {
+			if ($main.hasClass('fullScreen')) {
+				$main.removeClass('fullScreen');
+				$previewBtn.html('全屏预览');
+				scaleMainRoot($pageWidth.val());
+			} else {
+				$mainRoot.css('zoom', 1);
+				$main.addClass('fullScreen');
+				$previewBtn.html('退出全屏');
+			}
 	});
 
 	//高亮已创建的组件
@@ -282,7 +305,7 @@ $(function () {
 	});
 
 	//点击主面板创建Row
-	$main.click(function () {
+	$mainCanvas.click(function () {
 		if (current) {
 			if (current.role === "row") {
 				var id = cw.createUUID();
@@ -303,6 +326,8 @@ $(function () {
 		if (current) {
 			if (current.role === "col") {
 				var id = cw.createUUID();
+
+				createdComponentConfig[id] = {};
 
 				$this.append('<div class="cw-col ' + current.width + '" id="' + id + '"></div>');
 
@@ -365,8 +390,8 @@ $(function () {
 						$bottom.append($row);
 					}
 
-					var $text = $('<div class="cw-col w1 cw-text-right">' + config.text + '</div>');
-					var $cfg  = $('<div class="cw-col w3"></div>');
+					var $text = $('<div class="cw-col col-1 cw-text-right">' + config.text + '</div>');
+					var $cfg  = $('<div class="cw-col col-3"></div>');
 
 					if (type === "text") {
 						var fromSource = !!config.source;
@@ -421,7 +446,11 @@ $(function () {
 
 								componentConfig[key] = checked.value;
 
-								rerenderComponent(componentConfig);
+								if (typeof config.callback === "function") {
+									config.callback(checked);
+								} else {
+									rerenderComponent(componentConfig);
+								}
 							}
 						}
 
@@ -436,4 +465,12 @@ $(function () {
 			}
 		}
 	});
+
 });
+/*
+var styleNode = document.createElement('style');
+
+styleNode.innerHTML = 'body {width:40px;}';
+
+document.head.appendChild(styleNode);
+*/

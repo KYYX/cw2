@@ -193,15 +193,26 @@ body {
 	overflow-x: hidden;
 }
 
+#main.fullScreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1001;
+  width: 100%;
+  height: 100%;
+}
+
 #main-toolbox {
 	padding: 9px 16px;
 	text-align: right;
+	background-color: #fff;
 }
 
 #main-canvas {
 	flex: 1;
 	position: relative;
 	border-top: 1px solid #ccc;
+	background-color: #fff;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
@@ -265,9 +276,10 @@ body {
 }
 
 #bottom .cw-row {
-	/*margin-left:  -8px;
-    margin-right: -8px;*/
-	margin-bottom: 16px;
+	box-sizing: border-box;
+	width: 1024px;
+	padding-right: 14px;
+	margin: 0 auto 16px;
 	line-height: 26px;
 }
 
@@ -276,9 +288,9 @@ body {
 }
 
 #bottom .cw-col input {
-	width: 104px;
-	height: 19px;
+	box-sizing: border-box;
+	width: 100%;
+	height: 26px;
 	padding: 0 8px;
 	border-width: 0;
-	line-height: 19px;
 }
