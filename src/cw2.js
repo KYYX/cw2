@@ -671,6 +671,7 @@ import CONFIG from './config';
 		var activeCN = 'cw-list-active';
 
 		return function ($this, cfg) {
+			var $initClickNode = null;
 			var id = cfg.id || cw.createUUID();
 
 			var $list = $('<ul class="cw-list" id="' + id + '"></ul>');
@@ -700,10 +701,18 @@ import CONFIG from './config';
 				}
 
 				$list.append($li);
+
+				if (cfg.clickable && data.checked) {
+						$initClickNode = $li;
+				}
 			});
 
 
 			$this.append($list);
+
+			if ($initClickNode) {
+				$initClickNode.click();
+			}
 		}
 	})();
 
