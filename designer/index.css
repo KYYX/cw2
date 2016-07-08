@@ -2,11 +2,11 @@
 	padding: 0;
 	margin: 0;
 	font-size: 14px;
+	font-family: '微软雅黑';
 }
 
 body {
 	min-width: 1024px;
-	font-family: '微软雅黑';
 	overflow-y: hidden;
 }
 
@@ -93,7 +93,8 @@ body {
 
 #center {
 	display: flex;
-	height: 661px;
+	/*height: 661px;*/
+	flex: 1;
 }
 
 #center .h3 {
@@ -106,10 +107,14 @@ body {
 
 #left-of-center {
 	width: 190px;
+	color: #ccc;
+	background-color: #535353;
 }
 
 #left-of-center .list-of-create li.cw-list-active {
 	position: relative;
+	color: #fff;
+	background-color: #3d3d3d;
 }
 #left-of-center .list-of-create li.cw-list-active:after {
 	content: '';
@@ -188,7 +193,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	border-right: 1px solid #ccc;
-	border-left: 1px solid #ccc;
+	border-left: 1px solid #3a3a3a;
 	overflow-x: hidden;
 }
 
@@ -210,8 +215,9 @@ body {
 #main-canvas {
 	flex: 1;
 	position: relative;
-	border-top: 1px solid #ccc;
-	background-color: #fff;
+	padding: 16px;
+	/*border-top: 1px solid #ccc;*/
+	background-color: #262626;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
@@ -261,15 +267,16 @@ body {
 #bottom {
 	position: relative;
 	z-index: 1000;
-	flex: 1;
+	/*flex: 1;*/
+	height: 100px;
 	padding: 16px 0 0 0;
-	/*box-shadow: 0 -3px 3px #a9a9a9;*/
 }
 
 #bottom.empty {
-    display: flex;
+	display: flex;
 	align-items: center;
-    justify-content: center;
+	justify-content: center;
+	padding-top: 0;
 }
 
 #bottom > span {
