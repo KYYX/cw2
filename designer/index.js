@@ -7,6 +7,8 @@ var current2; //当前配置组件 {id:, role:}
 
 $(function () {
 	var $pageWidth 		 = $("#page-width");
+	var $rowMargin		 = $("#row-margin");
+	var $colPadding		 = $("#col-padding");
 	var $previewBtn    = $("#preview-btn");
 	var $main 				 = $("#main");
 	var $mainCanvas 	 = $("#main-canvas");
@@ -15,6 +17,9 @@ $(function () {
 	var $listOfCreated = $(".list-of-created");
 	var $highlight 		 = $(".cover-highlight");
 	var $createdComponentList = $(".created-component-list");
+
+	var rowMarginStyleNode = document.createElement('style');
+	var colPaddingStyleNode = document.createElement('style');
 
 	var current;  //当前创建的组件 {id:, role: }
 	var createdConfig = {}; //已创建的组件的属性配置
@@ -108,6 +113,17 @@ $(function () {
 		}
 	};
 
+	var setRowMargin = function (rowMargin) {
+		rowMarginStyleNode.innerHTML = '#main-root .cw-row {margin-bottom: ' + rowMargin + 'px;}';
+	};
+
+	var setColPadding = function (colPadding) {
+		var style = '';
+		style += '#main-root {padding-left: ' + colPadding + 'px;padding-right: ' + colPadding + 'px}'
+		style += '#main-root .cw-row {margin-left: -' + colPadding + 'px;margin-right: -' + colPadding + 'px}';
+		style += '#main-root .cw-col {padding-left: ' + colPadding + 'px;padding-right: ' + colPadding + 'px}';
+		colPaddingStyleNode.innerHTML = style;
+	};
 	//切换显示模式
 	$(".toSelect-mode").toSelect({
 		data: [{
@@ -154,11 +170,9 @@ $(function () {
 		data: [{
 			content: '行 ( Row )',
 			checked: true,
-			width: 'w',
 			role: 'row'
 		},{
 			content: '列 ( Col )',
-			width: 'auto',
 			role: 'col'
 		},{
 			content: '静态文本 ( Text )',
@@ -205,9 +219,20 @@ $(function () {
 	$pageWidth.val(defaultPgeWidth);
 	$pageWidth.blur(function () {
 		scaleMainRoot($pageWidth.val());
-	});
-	$pageWidth.keypress(function (event) {
+	}).keypress(function (event) {
 		event.keyCode === 13 &&	$(this).blur();
+	});
+
+	$rowMargin.blur(function () {
+		setRowMargin($rowMargin.val());
+	}).keypress(function (event) {
+		event.keyCode === 13 &&	$rowMargin.blur();
+	});
+
+	$colPadding.blur(function () {
+		setColPadding($colPadding.val());
+	}).keypress(function (event) {
+		event.keyCode === 13 &&	$colPadding.blur();
 	});
 
 	$previewBtn.click(function () {
@@ -329,7 +354,7 @@ $(function () {
 
 				createdComponentConfig[id] = {};
 
-				$this.append('<div class="cw-col ' + current.width + '" id="' + id + '"></div>');
+				$this.append('<div class="cw-col" id="' + id + '"></div>');
 
 				addCreatedComponentList(id, current.role);
 			} else {
@@ -382,8 +407,9 @@ $(function () {
 				};
 
 				configs.forEach(function (config, index) {
-					var type = config.type;
-					var key  = config.key;
+					var type  = config.type;
+					var key   = config.key;
+					var value = config.value || "";
 
 					if (index % 3 === 0) {
 						$row = $('<div class="cw-row"></div>');
@@ -396,7 +422,9 @@ $(function () {
 					if (type === "text") {
 						var fromSource = !!config.source;
 
-						var $input = $('<input type="text" value="' + (config.value || "") + '" />');
+						var $input = $('<input type="text" />')
+													.val(value)
+													.data("old", value);
 
 						$cfg.append($input);
 
@@ -407,18 +435,22 @@ $(function () {
 								data = DS_CUSTOM[data];
 
 								if (!data) {
-									return $.cw.alert('数据源【' + this.value + '】不存在');
+									return $.cw.alert('数据源【' + value + '】不存在');
 								}
+
+								config.value = this.value;
+
+								componentConfig[key] = data;
+
+								rerenderComponent(componentConfig);
+							} else {
+								typeof config.callback === "function" && config.callback(data, this);
 							}
-
-							config.value = this.value;
-
-							componentConfig[key] = data;
-
-							rerenderComponent(componentConfig);
+						}).focus(function () {
+							$(this).select();
 						});
 					} else if (type === "content") {
-						var $input = $('<input type="text" value="' + (config.value || "") + '" />');
+						var $input = $('<input type="text" value="' + value + '" />');
 
 						$cfg.append($input);
 
@@ -466,11 +498,6 @@ $(function () {
 		}
 	});
 
+	document.head.appendChild(rowMarginStyleNode);
+	document.head.appendChild(colPaddingStyleNode);
 });
-/*
-var styleNode = document.createElement('style');
-
-styleNode.innerHTML = 'body {width:40px;}';
-
-document.head.appendChild(styleNode);
-*/

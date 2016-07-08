@@ -185,7 +185,6 @@ body {
 
 #main {
 	flex: 1;
-	/*width: 1000px;*/
 	display: flex;
 	flex-direction: column;
 	border-right: 1px solid #ccc;
@@ -219,7 +218,10 @@ body {
 
 #main-root {
 	min-height: 100%;
-	padding: 16px 32px 1px 32px;
+	padding-top: 16px;
+	padding-bottom: 1px;
+	padding-left:  16px;
+	padding-right: 16px;
 	margin: 0 auto;
 	background-color: #fffeee;
 }

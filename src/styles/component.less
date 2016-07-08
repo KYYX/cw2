@@ -156,8 +156,6 @@
 }
 
 .cw-radio {
-	/*float: left;*/
-
 	&:after {
 		content: ' ';
 		display: block;
@@ -182,13 +180,15 @@
 
 	&.hor > div {
 		float: left;
-		margin-right: 20px;
+		margin-left: 20px;
+	}
+
+	&.hor > div:first-child {
+		margin-left: 0;
 	}
 }
 
 .cw-checkbox {
-	/*float: left;*/
-
 	&:after {
 		content: ' ';
 		display: block;
@@ -213,7 +213,11 @@
 
 	&.hor > div {
 		float: left;
-		margin-right: 20px;
+		margin-left: 20px;
+	}
+
+	&.hor > div:first-child {
+		margin-left: 0;
 	}
 }
 

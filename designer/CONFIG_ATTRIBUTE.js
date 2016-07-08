@@ -3,12 +3,23 @@
  */
 var CONFIG = {
 	row: [{
-		key:  "margin",
-		text: "行间距",
-		type: "text",
-		value: "",
-		callback: function (checked) {
-			$("#" + current2.id).toggleClass('nopadding', checked.value);
+		key:   "margin",
+		text:  "行间距",
+		type:  "text",
+		value: "全局设置",
+		callback: function (marginBottom, self) {
+			var _marginBottom = Number(marginBottom);
+			var $input = $(self);
+
+			if (_marginBottom > 0) {
+				$("#" + current2.id).css('marginBottom', _marginBottom);
+				$input.data('old', _marginBottom)
+			} else {
+				$.cw.alert('行间距只能为大于0的数字', function () {
+					$input.select();
+				});
+				$input.val($input.data("old"));
+			}
 		}
 	}],
 	col: [{
