@@ -41,14 +41,14 @@ module.exports = {
 	 @param alias:object:{name,value} -> 别名对应
 	 @param allBtn:boolean:false -> 是否有全选按钮
 	 @param data:array:[]
-	 @param callback:function(checkeds:array): -> 点击回调
+	 @param callback:function(checkeds:array, allChecked:boolean): -> 点击回调
 	 */
 	CHECKBOX: {
 		arrange: "-",
 		alias: {name: 'name', value: 'value'},
 		data: [],
 		allBtn: false,
-		callback: function (checkeds) {}
+		callback: function (checkeds, allChecked) {}
 	},
 	/*
 	 @name 下拉组件默认配置
