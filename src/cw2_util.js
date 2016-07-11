@@ -1,5 +1,5 @@
-const str = ('abcdefghijklmnopqrstuvwxyz' + 
-			 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 
+const str = ('abcdefghijklmnopqrstuvwxyz' +
+			 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
 			 '1234567890').split('');
 
 var cw = window.cw = {};
@@ -19,4 +19,12 @@ cw.createUUID = function (digit) {
 //首字母大写
 cw.capitalize = function (str) {
 	return typeof str === "string" ? str[0].toUpperCase() + str.substring(1) : str;
+};
+
+//获得DOM的真实高度
+cw.getDomContentHeight = function (node) {
+	var _node = jQuery && node instanceof jQuery ? node[0] : node;
+	var style = window.getComputedStyle(_node, null);
+
+	return parseFloat(style.getPropertyValue('height'));
 };
