@@ -37,6 +37,8 @@ $(function () {
 		} else if (role === "row") {
 			$this.append('<div class="cw-row" id="' + id + '"></div>');
 
+			createdComponentConfig[id] = {};
+
 			addCreatedComponentList(id, role);
 		} else if (role === "text") {
 			var $span = $('<span class="cw-text" id="' + id + '" contenteditable=false>静态文本</span>').click(function (event) {
@@ -44,6 +46,8 @@ $(function () {
 			});
 
 			$this.append($span);
+
+			createdComponentConfig[id] = {};
 
 			addCreatedComponentList(id, role);
 		} else {
