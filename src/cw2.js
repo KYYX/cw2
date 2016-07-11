@@ -161,18 +161,17 @@ import CONFIG from './config';
 	  		var curTop = cfg.top > 0 ? 0 - cfg.top : 0; //当前页面位置;
 
 	  		var $outerNode = $this,
-	  			$innerNode = $this.children(":first");
+	  				$innerNode = $this.children(":first");
 
 	  		//移除事件
 	  		$outerNode.addClass("cw scroll outer").unbind('mousewheel');
 	  		$innerNode.addClass("cw scroll inner").css("top", 0);
 
 	  		//删除滚动体
-	        $outerNode.children(".cw.scroll-outer").remove();
+	      $outerNode.children(".cw.scroll-outer").remove();
 
-	        var outerHeight = $outerNode.height();
-	  		var innerHeight = $innerNode.height();
-
+	      var outerHeight = $outerNode.height();
+	  		var innerHeight = cw.getDomContentHeight($innerNode);
 
 	        if (outerHeight < innerHeight) {
 	        	$innerNode.css("top", curTop);
@@ -186,7 +185,7 @@ import CONFIG from './config';
 		        //设置外滚动条高
 		        $outerScroll.height(outerHeight - 16);
 		        //设置内滚动条高
-				$innerScroll.height(outerHeight / innerHeight * 100 + "%");
+						$innerScroll.height(outerHeight / innerHeight * 100 + "%");
 
 		        var scrollOuterHeight = $outerScroll.height();
 		        var scrollInnerHeight = $innerScroll.height();
@@ -199,18 +198,18 @@ import CONFIG from './config';
 		        var move = function (vector) {
 		        	var innerTop = curTop + vector * gap;
 
-		        	if (innerTop < min) { //移动到最底部
-						curTop = min;
-						$innerScroll.css("top", scrollMaxTop);
-					} else if (innerTop > 0) { //移动到最顶部
-						curTop = 0;
-						$innerScroll.css("top", 0);
-					} else {
-						curTop = innerTop;
-						$innerScroll.css("top", Math.abs(curTop) / innerHeight * scrollOuterHeight);
-					}
+				    	if (innerTop < min) { //移动到最底部
+								curTop = min;
+								$innerScroll.css("top", scrollMaxTop);
+							} else if (innerTop > 0) { //移动到最顶部
+								curTop = 0;
+								$innerScroll.css("top", 0);
+							} else {
+								curTop = innerTop;
+								$innerScroll.css("top", Math.abs(curTop) / innerHeight * scrollOuterHeight);
+							}
 
-					$innerNode.css("top", curTop);
+							$innerNode.css("top", curTop);
 		        };
 
 		        //点击滚动条对页面的影响
@@ -220,6 +219,8 @@ import CONFIG from './config';
 		          } else {
 		            move(-1); //滚动条下移，屏幕上移
 		          }
+
+							return false;
 		        });
 
 		        //阻止点击滚动条导致页面滚动
