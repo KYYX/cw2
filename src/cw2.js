@@ -368,11 +368,7 @@ import CONFIG from './config';
 								return checked;
 							}).length;
 
-							if (checkedLength === cfg.data.length - 1) {
-								checkedIndexes[0] = true;
-							} else {
-								checkedIndexes[0] = false;
-							}
+							checkedIndexes[0] = checkedLength === cfg.data.length - 1
 						} else {
 							checkedIndexes[0] = false;
 						}
@@ -391,7 +387,7 @@ import CONFIG from './config';
 					checkeds.shift();
 				}
 
-				cfg.callback(checkeds);
+				cfg.callback(checkeds, checkeds.length === cfg.data.length);
 			});
 
 			render($checkbox, cfg.data, checkedIndexes);
