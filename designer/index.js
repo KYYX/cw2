@@ -12,6 +12,7 @@ $(function () {
 	var $previewBtn    = $("#preview-btn");
 	var $main 				 = $("#main");
 	var $mainCanvas 	 = $("#main-canvas");
+	var $mainRootWrap	 = $("#main-root-wrap");
 	var $mainRoot   	 = $("#main-root");
 	var $bottom 	  	 = $("#bottom");
 	var $listOfCreated = $(".list-of-created");
@@ -38,7 +39,7 @@ $(function () {
 
 			addCreatedComponentList(id, role);
 		} else if (role === "text") {
-			var $span = $('<span class="cw-text" id="' + id + '" contenteditable="true">静态文本</span>').click(function (event) {
+			var $span = $('<span class="cw-text" id="' + id + '" contenteditable=false>静态文本</span>').click(function (event) {
 				event.stopPropagation();
 			});
 
@@ -86,6 +87,8 @@ $(function () {
 
 		$listOfCreated.toScroll({gap: 33});
 
+		$mainRootWrap.toScroll({gap: 40});
+
 		$li.click();
 	};
 
@@ -99,14 +102,14 @@ $(function () {
 		pageWidth = Number(pageWidth);
 
 		if (pageWidth) {
-			$mainRoot.css({
+			$mainRootWrap.css({
 				width: pageWidth,
 				zoom:  pageWidth > defaultPgeWidth ? defaultPgeWidth / pageWidth : 1
 			});
 		} else {
 			pageWidth = defaultPgeWidth;
 			$pageWidth.val(pageWidth);
-			$mainRoot.css({
+			$mainRootWrap.css({
 				width: pageWidth,
 				zoom:  1
 			});
@@ -384,12 +387,12 @@ $(function () {
 
 		$bottom.empty().removeClass('empty');
 
-		if ($this.hasClass('active')) {
-			$this.removeClass('active');
+		if ($this.hasClass('cw-list-active')) {
+			$this.removeClass('cw-list-active');
 			$bottom.addClass('empty').append('<span>请在【已创建的组件】中选择组件</span>');
 		} else {
-			$createdComponentList.children('.active').removeClass('active');
-			$this.addClass('active');
+			$createdComponentList.children('.cw-list-active').removeClass('cw-list-active');
+			$this.addClass('cw-list-active');
 
 			var id   = $this.attr('id').replace('created-', '');
 			var role = $this.data('role');

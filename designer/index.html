@@ -17,23 +17,19 @@
 		<!-- top -->
 		<div id="top" class="cw-container">
 			<div class="cw-row">
-				<div class="cw-col">显示模式：</div>
+				<div class="cw-col">显示模式</div>
 				<div class="cw-col toSelect-mode"></div>
-				<!--
-				<div class="cw-col">布局：</div>
-				<div class="cw-col toSelect-layout"></div>
-				-->
-				<div class="cw-col">主题：</div>
+				<div class="cw-col">主题色</div>
 				<div class="cw-col toSelect-theme"></div>
-				<div class="cw-col">页面宽：</div>
+				<div class="cw-col">页面宽</div>
 				<div class="cw-col">
 					<input type="text" id="page-width">
 				</div>
-				<div class="cw-col">行间距：</div>
+				<div class="cw-col">行间距</div>
 				<div class="cw-col">
 					<input type="text" id="row-margin" value="16">
 				</div>
-				<div class="cw-col">列边距：</div>
+				<div class="cw-col">列边距</div>
 				<div class="cw-col">
 					<input type="text" id="col-padding" value="16">
 				</div>
@@ -44,7 +40,7 @@
 			<!-- left -->
 			<div id="left-of-center">
 				<div class="h3">可创建的组件</div>
-				<div class="list-of-create"></div>
+				<div class="list-of-create list-of-component"></div>
 			</div>
 			<!-- main -->
 			<div id="main">
@@ -53,14 +49,16 @@
 					<button class="cw-btn" id="export-btn">导出</button>
 				</div>
 				<div id="main-canvas">
-					<div class="cw-container dev" id="main-root"></div>
+					<div id="main-root-wrap">
+						<div class="cw-container dev" id="main-root"></div>
+					</div>
 				</div>
 			</div>
 			<!-- right -->
 			<div id="right-of-center">
 				<div class="h3">已创建的组件</div>
-				<div class="list-of-created">
-					<ul class="created-component-list"></ul>
+				<div class="list-of-created list-of-component">
+					<ul class="created-component-list cw-list cw-list-clickable"></ul>
 				</div>
 			</div>
 		</div>

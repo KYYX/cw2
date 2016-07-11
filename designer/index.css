@@ -28,7 +28,6 @@ body {
 
 .component-wrap {
 	position: relative;
-	/*float: left;*/
 	font-size: 0;
 }
 
@@ -60,26 +59,40 @@ body {
 	align-items: center;
 	height: 64px;
 	padding: 0;
-	box-shadow: 0 3px 3px #aaa;
+	border-bottom: 2px solid #282828;
 	color: #fff;
-	background-color: #21bd73;
+	background-color: #535353;
+}
+
+#top .cw-row {
+	width: 1024px;
+	margin: 0 auto;
 }
 
 #top .cw-col {
+
 	line-height: 24px;
+	padding: 0 8px;
 }
 
 #top .cw-col:nth-child(2n + 1) {
-	margin-right: 8px;
+	/*margin-right: 8px;*/
 	/*font-size: 16px;*/
+
 }
 
 #top .cw-col:nth-child(2n) {
-	margin-right: 32px;
+	width: 10%;
+	margin-right: 16px;
+}
+
+#top .cw-col:nth-child(10) {
+	margin-right: 0;
 }
 
 #top input {
-	width: 46px;
+	box-sizing: border-box;
+	width: 100%;
 	padding: 0 8px;
 	border: 1px solid #dbdcde;
 	border-radius: 2px;
@@ -93,30 +106,27 @@ body {
 
 #center {
 	display: flex;
-	/*height: 661px;*/
 	flex: 1;
+	border-top: 2px solid #6a6a6a;
+	border-bottom: 2px solid #282828;
 }
 
 #center .h3 {
 	height: 45px;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #3a3a3a;
+	color: #fff;
 	font-size: 16px;
 	line-height: 45px;
 	text-align: center;
 }
 
-#left-of-center {
-	width: 190px;
-	color: #ccc;
-	background-color: #535353;
-}
-
-#left-of-center .list-of-create li.cw-list-active {
+#center .list-of-component li.cw-list-active {
 	position: relative;
 	color: #fff;
 	background-color: #3d3d3d;
 }
-#left-of-center .list-of-create li.cw-list-active:after {
+
+#center .list-of-component li.cw-list-active:after {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -126,28 +136,26 @@ body {
 	background-color: #21bd73;
 }
 
+
+
+#left-of-center {
+	width: 190px;
+	border-right: 1px solid #282828;
+	color: #ccc;
+	background-color: #535353;
+}
+
 #right-of-center {
+	display: flex;
+	flex-direction: column;
 	width: 200px;
+	border-left: 1px solid #282828;
+	color: #ccc;
+	background-color: #535353;
 }
 
 #right-of-center .list-of-created {
-	height: 618px;
-}
-
-#right-of-center .created-component-list {
-	list-style-type: none;
-}
-
-#right-of-center .created-component-list > li {
-	position: relative;
-	padding-left:  24px;
-	padding-right: 8px;
-	border-bottom: 1px solid #e0e0e0;
-	line-height:   32px;
-	cursor: pointer;
-}
-#right-of-center .created-component-list > li:last-child {
-	border-bottom: 0;
+	flex: 1;
 }
 
 #right-of-center .created-component-list > li > i {
@@ -169,31 +177,13 @@ body {
 	display: block;
 }
 
-#right-of-center .created-component-list > li > div {
-	position: absolute;
-	top: 0;
-	left: 0;
-	display: none;
-	width: 8px;
-	height: 100%;
-	background-color: #21bd73;
-}
-#right-of-center .created-component-list > li.active > div,
-#right-of-center .created-component-list > li:hover > div {
-	display: block;
-}
-#right-of-center .created-component-list > li.active > span {
-	color: #21bd73;
-}
-
-
 
 #main {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-	border-right: 1px solid #ccc;
-	border-left: 1px solid #3a3a3a;
+	border-right: 1px solid #3a3a3a;
+	border-left:  1px solid #3a3a3a;
 	overflow-x: hidden;
 }
 
@@ -208,28 +198,32 @@ body {
 
 #main-toolbox {
 	padding: 9px 16px;
+	border-bottom: 1px solid #3a3a3a;
 	text-align: right;
-	background-color: #fff;
+	background-color: #535353;
 }
 
 #main-canvas {
 	flex: 1;
 	position: relative;
-	padding: 16px;
-	/*border-top: 1px solid #ccc;*/
-	background-color: #262626;
-	overflow-y: scroll;
-	overflow-x: hidden;
+	padding: 32px;
+	background-color: #282828;
+	overflow: hidden;
+}
+
+#main-root-wrap {
+	height: 100%;
+	margin: 0 auto;
+	border-radius: 2px;
+	background-color: #fff;
 }
 
 #main-root {
-	min-height: 100%;
 	padding-top: 16px;
 	padding-bottom: 1px;
 	padding-left:  16px;
 	padding-right: 16px;
-	margin: 0 auto;
-	background-color: #fffeee;
+	background-color: #fff;
 }
 
 #main-root:empty {
@@ -248,7 +242,7 @@ body {
 }
 
 #main-root.dev .cw-row {
-	background-color: rgba(255,0,0,.5);
+	background-color: #efefef;
 }
 
 #main-root .cw-row:empty {
@@ -268,8 +262,10 @@ body {
 	position: relative;
 	z-index: 1000;
 	/*flex: 1;*/
-	height: 100px;
-	padding: 16px 0 0 0;
+	height: 116px;
+	padding: 24px 0 8px 0;
+	border-top: 2px solid #6a6a6a;
+	background-color: #535353;
 }
 
 #bottom.empty {
@@ -280,7 +276,7 @@ body {
 }
 
 #bottom > span {
-	color: gray;
+	color: #a9a9a9;
 	font-size: 20px;
 }
 
@@ -294,6 +290,7 @@ body {
 
 #bottom .cw-col {
 	padding: 0 8px;
+	color: #fff;
 }
 
 #bottom .cw-col input {

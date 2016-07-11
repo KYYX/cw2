@@ -117,7 +117,7 @@ var CONFIG = {
 	}, {
 		key:  "arrange",
 		text: "排列方式",
-		type: "radio",
+		type: "select",
 		config: {
 			data: [{name: "水平", value: "-", checked: true}, {name: "垂直", value: "|"}]
 		}
