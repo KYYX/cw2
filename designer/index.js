@@ -9,7 +9,12 @@ $(function () {
 	var $pageWidth 		 = $("#page-width");
 	var $rowMargin		 = $("#row-margin");
 	var $colPadding		 = $("#col-padding");
-	var $previewBtn    = $("#preview-btn");
+
+	//toolbox
+	var $previewBtn = $("#preview-btn");
+	var $resetBtn   = $("#reset-btn");
+
+	//canvas
 	var $main 				 = $("#main");
 	var $mainCanvas 	 = $("#main-canvas");
 	var $mainRootWrap	 = $("#main-root-wrap");
@@ -19,7 +24,7 @@ $(function () {
 	var $highlight 		 = $(".cover-highlight");
 	var $createdComponentList = $(".created-component-list");
 
-	var rowMarginStyleNode = document.createElement('style');
+	var rowMarginStyleNode  = document.createElement('style');
 	var colPaddingStyleNode = document.createElement('style');
 
 	var current;  //当前创建的组件 {id:, role: }
@@ -98,7 +103,18 @@ $(function () {
 
 	//从【已创建的组件】列表里删除组件
 	var removeCreatedComponentList = function (id) {
-		$("#created-" + id).remove();
+		var $removeNode = $("#created-" + id);
+
+		if ($removeNode.hasClass("cw-list-active")) {
+			$removeNode.click();
+		}
+
+		$removeNode.animate({
+			height: 0,
+			opacity: 0
+		}, function () {
+			$removeNode.remove()
+		});
 	};
 
 	//缩放画布到指定宽度
@@ -242,6 +258,7 @@ $(function () {
 		event.keyCode === 13 &&	$colPadding.blur();
 	});
 
+	//全屏预览
 	$previewBtn.click(function () {
 			if ($main.hasClass('fullScreen')) {
 				$main.removeClass('fullScreen');
@@ -252,6 +269,19 @@ $(function () {
 				$main.addClass('fullScreen');
 				$previewBtn.html('退出全屏');
 			}
+	});
+
+	//重置画布
+	$resetBtn.click(function () {
+		$.cw.confirm('确定清空画布?', function (flag) {
+			if (flag) {
+				createdConfig = {}; //已创建的组件的属性配置
+				createdComponentConfig = {}; //已创建的组件属性
+
+				$mainRoot.empty();
+				$createdComponentList.empty();
+			}
+		});
 	});
 
 	//高亮已创建的组件
@@ -306,7 +336,7 @@ $(function () {
 				var $cpt  = $("#" + id);
 				var $wrap = $cpt.parent('.component-wrap');
 
-				//循环删除自己下面创建的组件
+				//循环从已创建的列表中删除自己下面创建的组件
 				$cpt.find('[id]').each(function () {
 					var id  = $(this).attr("id");
 					var $li = $("#created-" + id);
@@ -323,10 +353,14 @@ $(function () {
 
 				if ($wrap.length > 0) {
 					//普通组件删除wrap层
-					$wrap.remove();
+					$wrap.animate({opacity: 0}, function () {
+						$wrap.remove();
+					});
 				} else {
 					//布局组件直接删除
-					$cpt.remove();
+					$cpt.animate({opacity: 0}, function () {
+						$cpt.remove();
+					});
 				}
 
 				removeCreatedComponentList(id);
